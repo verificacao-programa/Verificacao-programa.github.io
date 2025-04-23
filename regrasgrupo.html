@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panela Esteli22 - Regras do Grupo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cosmic-purple: #6a00f4;
+            --neon-pink: #ff00ff;
+            --star-blue: #00f0ff;
+            --galaxy-dark: #0b0118;
+            --nebula-orange: #ff6d00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--galaxy-dark);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(106, 0, 244, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.15) 0%, transparent 25%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.5"/></svg>');
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .comet {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, white);
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            background: linear-gradient(90deg, var(--neon-pink), var(--star-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            animation: cosmicGlow 8s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes cosmicGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--star-blue);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .rules-section {
+            width: 100%;
+            background: rgba(15, 3, 40, 0.7);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 
+                0 0 30px rgba(106, 0, 244, 0.5),
+                inset 0 0 20px rgba(0, 240, 255, 0.3);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            position: relative;
+        }
+        
+        .rules-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--star-blue);
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+        
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .rule-card {
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+        
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+        
+        .rule-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--neon-pink);
+            margin-bottom: 1rem;
+        }
+        
+        .rule-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .rule-highlight {
+            color: var(--nebula-orange);
+            font-weight: bold;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--cosmic-purple), var(--neon-pink));
+            color: white;
+            box-shadow: 0 5px 25px rgba(106, 0, 244, 0.5);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(255, 0, 255, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--star-blue);
+            border: 2px solid var(--star-blue);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
+        }
+        
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            animation: floatUp 4s ease-in-out forwards;
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--galaxy-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(0, 240, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--star-blue);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--star-blue);
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+            
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rule-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">INICIALIZANDO SISTEMA ESTELAR<span class="loading-dots"></span></div>
+    </div>
+
+    <header>
+        <h1>PANELA ESTELI22</h1>
+        <p class="tagline">REGRAS DO GRUPO - CONTRIBUA OU RALE</p>
+    </header>
+    
+    <div class="main-container">
+        <div class="rules-section">
+            <h3 class="rules-title">✅ REGRAS DO GRUPO ✅</h3>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-number">01</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Contribuir com o grupo ou ralar</span>. Todos os membros devem trazer valor para a comunidade, compartilhando conhecimento e oportunidades.
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">02</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Aprovou tem o esquema? Joga no grupo!</span> Se você testou e aprovou um método, compartilhe com todos para crescerem juntos.
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">03</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Explanar pra fora os esquemas do grupo é VAPO</span>. Manter o sigilo das estratégias discutidas aqui é fundamental para o sucesso de todos.
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">04</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Chame pessoas pra contribuir com o grupo</span>. Traga novos membros que possam agregar valor e manter a comunidade ativa e produtiva.
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">05</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Respeito acima de tudo</span>. Discussões saudáveis são incentivadas, mas sempre com respeito aos demais membros.
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="rule-number">06</div>
+                    <div class="rule-content">
+                        <span class="rule-highlight">Sem flood ou spam</span>. Mantenha o foco em conteúdos relevantes para o propósito do grupo.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="join-group">
+                    <span>👥</span> PARTICIPAR DO GRUPO
+                </button>
+                <button class="btn btn-secondary" id="share-rules">
+                    <span>📢</span> COMPARTILHAR REGRAS
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>✨ PANELA ESTELI22 - CRESCIMENTO COLETIVO ✨</p>
+        <p>Juntos somos mais fortes</p>
+    </footer>
+    
+    <script>
+        // Criar estrelas de fundo
+        function createStars() {
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Tamanho aleatório
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Posição aleatória
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                
+                // Opacidade aleatória
+                star.style.opacity = Math.random();
+                
+                // Brilho intermitente
+                star.style.animation = `twinkle ${Math.random() * 5 + 5}s ease-in-out infinite alternate`;
+                
+                document.body.appendChild(star);
+            }
+            
+            // Criar alguns cometas
+            for (let i = 0; i < 5; i++) {
+                createComet();
+            }
+        }
+        
+        // Criar cometa
+        function createComet() {
+            const comet = document.createElement('div');
+            comet.className = 'comet';
+            
+            // Posição inicial aleatória
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 50;
+            comet.style.left = `${startX}vw`;
+            comet.style.top = `${startY}vh`;
+            
+            // Tamanho aleatório
+            const size = Math.random() * 4 + 2;
+            comet.style.width = `${size}px`;
+            comet.style.height = `${size}px`;
+            
+            document.body.appendChild(comet);
+            
+            // Animação
+            const duration = Math.random() * 20 + 10;
+            const endX = startX + Math.random() * 30 - 15;
+            const endY = startY + Math.random() * 30 + 20;
+            
+            const animation = comet.animate(
+                [
+                    { left: `${startX}vw`, top: `${startY}vh`, opacity: 1 },
+                    { left: `${endX}vw`, top: `${endY}vh`, opacity: 0 }
+                ],
+                {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.42, 0, 0.58, 1)'
+                }
+            );
+            
+            animation.onfinish = () => {
+                comet.remove();
+                setTimeout(createComet, Math.random() * 10000);
+            };
+        }
+        
+        // Criar partículas
+        function createParticles(element, count, emojis) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                if (emojis) {
+                    particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    particle.style.fontSize = `${Math.random() * 1 + 1}rem`;
+                } else {
+                    particle.style.width = `${Math.random() * 6 + 4}px`;
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = getRandomColor();
+                    particle.style.borderRadius = '50%';
+                }
+                
+                particle.style.left = `${centerX + (Math.random() - 0.5) * 50}px`;
+                particle.style.top = `${centerY + (Math.random() - 0.5) * 50}px`;
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 4000);
+            }
+        }
+        
+        // Obter cor aleatória
+        function getRandomColor() {
+            const colors = ['#6a00f4', '#ff00ff', '#00f0ff', '#ff6d00', '#2ec4b6'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simular carregamento
+            setTimeout(() => {
+                document.querySelector('.loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.querySelector('.loading').style.display = 'none';
+                }, 500);
+                
+                createStars();
+            }, 2500);
+            
+            // Botão de participar do grupo
+            document.getElementById('join-group').addEventListener('click', function() {
+                alert('Link para entrar no grupo será compartilhado em breve!');
+                createParticles(this, 30, ['👥', '🚀', '💎', '✨']);
+            });
+            
+            // Botão de compartilhar regras
+            document.getElementById('share-rules').addEventListener('click', function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Regras do Grupo Panela Esteli22',
+                        text: 'Confira as regras do nosso grupo exclusivo!',
+                        url: window.location.href
+                    }).catch(err => {
+                        console.log('Erro ao compartilhar:', err);
+                    });
+                } else {
+                    // Fallback para copiar o link
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('Link copiado para a área de transferência!');
+                }
+                
+                createParticles(this, 30, ['📢', '📜', '✨', '🚀']);
+            });
+            
+            // Efeito nas cartas de regras
+            document.querySelectorAll('.rule-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    createParticles(this, 5, ['✨', '🌟', '💎']);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
