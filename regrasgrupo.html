@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panela Esteli22 - Regras do Grupo</title>
+    <title>Panela Esteli22 - Regras Exclusivas</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
         :root {
             --cosmic-purple: #6a00f4;
@@ -12,6 +13,8 @@
             --star-blue: #00f0ff;
             --galaxy-dark: #0b0118;
             --nebula-orange: #ff6d00;
+            --dark-space: #05010f;
+            --pulse-glow: 0 0 15px currentColor;
         }
         
         * {
@@ -22,67 +25,72 @@
         
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--galaxy-dark);
+            background-color: var(--dark-space);
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(106, 0, 244, 0.15) 0%, transparent 25%),
                 radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.15) 0%, transparent 25%),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.5"/></svg>');
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.8"/></svg>');
         }
         
-        .star {
+        .particle {
             position: absolute;
-            background-color: white;
-            border-radius: 50%;
             pointer-events: none;
             z-index: 1;
+            animation: floatUp 4s ease-in-out forwards;
         }
         
-        .comet {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: linear-gradient(90deg, transparent, white);
-            border-radius: 50%;
-            filter: blur(1px);
-            pointer-events: none;
-            z-index: 1;
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
         
         header {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 4rem 1rem;
             position: relative;
             overflow: hidden;
+            background: radial-gradient(circle at center, rgba(11, 1, 24, 0.8), transparent 70%);
         }
         
         h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            background: linear-gradient(90deg, var(--neon-pink), var(--star-blue));
+            font-size: 4.5rem;
+            background: linear-gradient(90deg, var(--neon-pink), var(--star-blue), var(--nebula-orange));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            animation: cosmicGlow 8s ease infinite;
-            background-size: 200% 200%;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
+            margin-bottom: 1.5rem;
+            letter-spacing: 3px;
+            animation: cosmicPulse 6s ease infinite;
+            position: relative;
         }
         
-        @keyframes cosmicGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        @keyframes cosmicPulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
+            50% { text-shadow: 0 0 50px var(--neon-pink); }
         }
         
         .tagline {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: var(--star-blue);
             max-width: 800px;
-            margin: 0 auto 2rem;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            margin: 0 auto 3rem;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.7);
+            font-weight: 700;
+            position: relative;
+        }
+        
+        .tagline::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-pink), var(--star-blue));
+            margin: 1rem auto;
+            border-radius: 3px;
         }
         
         .main-container {
@@ -98,88 +106,147 @@
         
         .rules-section {
             width: 100%;
-            background: rgba(15, 3, 40, 0.7);
-            border-radius: 25px;
-            padding: 3rem;
+            background: rgba(15, 3, 40, 0.6);
+            border-radius: 30px;
+            padding: 4rem;
             box-shadow: 
-                0 0 30px rgba(106, 0, 244, 0.5),
-                inset 0 0 20px rgba(0, 240, 255, 0.3);
-            border: 2px solid rgba(0, 240, 255, 0.3);
+                0 0 40px rgba(106, 0, 244, 0.7),
+                inset 0 0 30px rgba(0, 240, 255, 0.4);
+            border: 2px solid rgba(0, 240, 255, 0.4);
             position: relative;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.5s, box-shadow 0.5s;
+        }
+        
+        .rules-section:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            box-shadow: 
+                0 15px 50px rgba(106, 0, 244, 0.9),
+                inset 0 0 40px rgba(0, 240, 255, 0.6);
         }
         
         .rules-title {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             color: var(--star-blue);
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.7);
+            position: relative;
         }
+        
+        .rules-title::before, .rules-title::after {
+            content: '✨';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+        
+        .rules-title::before { left: -40px; }
+        .rules-title::after { right: -40px; }
         
         .rules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 3rem;
         }
         
         .rule-card {
-            background: rgba(0, 240, 255, 0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid transparent;
-            backdrop-filter: blur(5px);
+            background: linear-gradient(145deg, rgba(0, 240, 255, 0.1), rgba(106, 0, 244, 0.2));
+            border-radius: 25px;
+            padding: 2.5rem;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: opacity 0.5s;
         }
         
         .rule-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2);
-            border-color: rgba(0, 240, 255, 0.3);
+            transform: translateY(-15px) rotateZ(1deg);
+            box-shadow: 0 20px 50px rgba(0, 240, 255, 0.4);
+            border-color: var(--neon-pink);
+        }
+        
+        .rule-card:hover::before {
+            opacity: 1;
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(45deg) translate(-30%, -30%); }
+            100% { transform: rotate(45deg) translate(30%, 30%); }
         }
         
         .rule-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: var(--neon-pink);
-            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--neon-pink), var(--star-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            text-shadow: var(--pulse-glow);
         }
         
         .rule-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .rule-highlight {
-            color: var(--nebula-orange);
+            color: var(--star-blue);
             font-weight: bold;
+            text-shadow: 0 0 10px var(--star-blue);
         }
         
         .action-buttons {
             display: flex;
-            gap: 1.5rem;
-            margin-top: 3rem;
+            gap: 2rem;
+            margin-top: 4rem;
             flex-wrap: wrap;
             justify-content: center;
         }
         
         .btn {
-            padding: 1rem 2rem;
+            padding: 1.2rem 2.5rem;
             border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s;
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
             z-index: 1;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
         }
         
         .btn::before {
@@ -189,7 +256,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transform: translateX(-100%);
             transition: transform 0.6s;
             z-index: -1;
@@ -202,32 +269,35 @@
         .btn-primary {
             background: linear-gradient(45deg, var(--cosmic-purple), var(--neon-pink));
             color: white;
-            box-shadow: 0 5px 25px rgba(106, 0, 244, 0.5);
+            box-shadow: 0 5px 25px rgba(106, 0, 244, 0.7);
+            border: 2px solid var(--neon-pink);
         }
         
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px rgba(255, 0, 255, 0.6);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.8);
+            background: linear-gradient(45deg, var(--neon-pink), var(--cosmic-purple));
         }
         
         .btn-secondary {
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(0, 240, 255, 0.15);
             color: var(--star-blue);
             border: 2px solid var(--star-blue);
+            box-shadow: 0 5px 25px rgba(0, 240, 255, 0.4);
         }
         
         .btn-secondary:hover {
             background: rgba(0, 240, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 240, 255, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.6);
         }
         
         footer {
             text-align: center;
-            padding: 3rem 1rem;
-            margin-top: 3rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1rem;
+            padding: 4rem 1rem;
+            margin-top: 5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
             position: relative;
         }
         
@@ -237,21 +307,16 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 50%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--star-blue), transparent);
         }
         
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            z-index: 5;
-            animation: floatUp 4s ease-in-out forwards;
-        }
-        
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        footer p:first-child {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--star-blue);
+            text-shadow: 0 0 15px var(--star-blue);
         }
         
         .loading {
@@ -260,33 +325,39 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--galaxy-dark);
+            background: var(--dark-space);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
         
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(0, 240, 255, 0.3);
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(0, 240, 255, 0.2);
             border-radius: 50%;
             border-top-color: var(--star-blue);
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 2rem;
+            border-bottom-color: var(--neon-pink);
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 0 30px var(--star-blue);
         }
         
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .loading-text {
             color: var(--star-blue);
-            font-size: 1.5rem;
-            letter-spacing: 2px;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
             text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 15px var(--star-blue);
         }
         
         .loading-dots::after {
@@ -300,13 +371,31 @@
             60%, 100% { content: '...'; }
         }
         
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 3.5rem;
             }
             
             .tagline {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
+            }
+            
+            .rules-section {
+                padding: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .tagline {
+                font-size: 1.3rem;
+            }
+            
+            .rules-section {
+                padding: 2rem;
             }
             
             .rules-grid {
@@ -314,7 +403,38 @@
             }
             
             .rule-card {
-                padding: 1.5rem;
+                padding: 2rem;
+            }
+            
+            .action-buttons {
+                gap: 1.5rem;
+            }
+            
+            .btn {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .rules-title {
+                font-size: 1.8rem;
+            }
+            
+            .rule-number {
+                font-size: 2rem;
+            }
+            
+            .rule-content {
+                font-size: 1rem;
             }
         }
     </style>
@@ -322,7 +442,7 @@
 <body>
     <div class="loading">
         <div class="loading-spinner"></div>
-        <div class="loading-text">INICIALIZANDO SISTEMA ESTELAR<span class="loading-dots"></span></div>
+        <div class="loading-text">INICIALIZANDO PANELA ESTELI22<span class="loading-dots"></span></div>
     </div>
 
     <header>
@@ -378,9 +498,9 @@
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-primary" id="join-group">
+                <a href="https://chat.whatsapp.com/GcqSNb83GFS6waXdRlaFgi" class="btn btn-primary" id="join-group" target="_blank">
                     <span>👥</span> PARTICIPAR DO GRUPO
-                </button>
+                </a>
                 <button class="btn btn-secondary" id="share-rules">
                     <span>📢</span> COMPARTILHAR REGRAS
                 </button>
@@ -394,78 +514,8 @@
     </footer>
     
     <script>
-        // Criar estrelas de fundo
-        function createStars() {
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                
-                // Tamanho aleatório
-                const size = Math.random() * 3;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                
-                // Posição aleatória
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = `${Math.random() * 100}vh`;
-                
-                // Opacidade aleatória
-                star.style.opacity = Math.random();
-                
-                // Brilho intermitente
-                star.style.animation = `twinkle ${Math.random() * 5 + 5}s ease-in-out infinite alternate`;
-                
-                document.body.appendChild(star);
-            }
-            
-            // Criar alguns cometas
-            for (let i = 0; i < 5; i++) {
-                createComet();
-            }
-        }
-        
-        // Criar cometa
-        function createComet() {
-            const comet = document.createElement('div');
-            comet.className = 'comet';
-            
-            // Posição inicial aleatória
-            const startX = Math.random() * 100;
-            const startY = Math.random() * 50;
-            comet.style.left = `${startX}vw`;
-            comet.style.top = `${startY}vh`;
-            
-            // Tamanho aleatório
-            const size = Math.random() * 4 + 2;
-            comet.style.width = `${size}px`;
-            comet.style.height = `${size}px`;
-            
-            document.body.appendChild(comet);
-            
-            // Animação
-            const duration = Math.random() * 20 + 10;
-            const endX = startX + Math.random() * 30 - 15;
-            const endY = startY + Math.random() * 30 + 20;
-            
-            const animation = comet.animate(
-                [
-                    { left: `${startX}vw`, top: `${startY}vh`, opacity: 1 },
-                    { left: `${endX}vw`, top: `${endY}vh`, opacity: 0 }
-                ],
-                {
-                    duration: duration * 1000,
-                    easing: 'cubic-bezier(0.42, 0, 0.58, 1)'
-                }
-            );
-            
-            animation.onfinish = () => {
-                comet.remove();
-                setTimeout(createComet, Math.random() * 10000);
-            };
-        }
-        
-        // Criar partículas
-        function createParticles(element, count, emojis) {
+        // Efeitos de Partículas Interativas
+        function createParticles(element, count, emojis, colors) {
             const rect = element.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -476,72 +526,149 @@
                 
                 if (emojis) {
                     particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                    particle.style.fontSize = `${Math.random() * 1 + 1}rem`;
+                    particle.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
                 } else {
-                    particle.style.width = `${Math.random() * 6 + 4}px`;
-                    particle.style.height = particle.style.width;
-                    particle.style.backgroundColor = getRandomColor();
+                    const size = Math.random() * 8 + 4;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.backgroundColor = colors ? colors[Math.floor(Math.random() * colors.length)] : getRandomColor();
                     particle.style.borderRadius = '50%';
+                    particle.style.boxShadow = `0 0 ${size}px currentColor`;
                 }
                 
-                particle.style.left = `${centerX + (Math.random() - 0.5) * 50}px`;
-                particle.style.top = `${centerY + (Math.random() - 0.5) * 50}px`;
+                particle.style.left = `${centerX + (Math.random() - 0.5) * 100}px`;
+                particle.style.top = `${centerY + (Math.random() - 0.5) * 100}px`;
                 
                 document.body.appendChild(particle);
                 
-                setTimeout(() => {
-                    particle.remove();
-                }, 4000);
+                // Animação GSAP para movimento orgânico
+                gsap.to(particle, {
+                    x: (Math.random() - 0.5) * 200,
+                    y: (Math.random() - 0.5) * 200,
+                    opacity: 0,
+                    scale: 0,
+                    duration: Math.random() * 3 + 2,
+                    ease: "power2.out",
+                    onComplete: () => particle.remove()
+                });
             }
         }
         
-        // Obter cor aleatória
         function getRandomColor() {
             const colors = ['#6a00f4', '#ff00ff', '#00f0ff', '#ff6d00', '#2ec4b6'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
-        // Event listeners
+        // Efeito de Estrelas Cintilantes
+        function createStars() {
+            for (let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 4;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.opacity = Math.random();
+                star.style.animation = `twinkle ${Math.random() * 10 + 5}s ease-in-out infinite alternate`;
+                
+                document.body.appendChild(star);
+            }
+        }
+        
+        // Efeito de Cometas Aleatórios
+        function createComet() {
+            const comet = document.createElement('div');
+            comet.className = 'comet';
+            
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 50;
+            const size = Math.random() * 6 + 3;
+            
+            comet.style.left = `${startX}vw`;
+            comet.style.top = `${startY}vh`;
+            comet.style.width = `${size}px`;
+            comet.style.height = `${size}px`;
+            comet.style.background = `linear-gradient(90deg, transparent, white ${size/2}px, transparent)`;
+            
+            document.body.appendChild(comet);
+            
+            gsap.to(comet, {
+                x: `${(Math.random() - 0.5) * 30}vw`,
+                y: `${Math.random() * 50 + 30}vh`,
+                opacity: 0,
+                duration: Math.random() * 15 + 10,
+                ease: "power1.in",
+                onComplete: () => {
+                    comet.remove();
+                    setTimeout(createComet, Math.random() * 15000);
+                }
+            });
+        }
+        
+        // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
             // Simular carregamento
             setTimeout(() => {
-                document.querySelector('.loading').style.opacity = '0';
-                setTimeout(() => {
-                    document.querySelector('.loading').style.display = 'none';
-                }, 500);
+                gsap.to('.loading', {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => document.querySelector('.loading').style.display = 'none'
+                });
                 
                 createStars();
-            }, 2500);
+                for (let i = 0; i < 5; i++) createComet();
+            }, 3000);
             
-            // Botão de participar do grupo
-            document.getElementById('join-group').addEventListener('click', function() {
-                alert('Link para entrar no grupo será compartilhado em breve!');
-                createParticles(this, 30, ['👥', '🚀', '💎', '✨']);
+            // Efeitos nos botões
+            document.getElementById('join-group').addEventListener('click', function(e) {
+                // Efeitos visuais
+                createParticles(this, 50, ['🚀', '💎', '👥', '✨'], ['#6a00f4', '#ff00ff']);
+                gsap.to(this, {
+                    scale: 0.9,
+                    duration: 0.2,
+                    yoyo: true,
+                    repeat: 1
+                });
             });
             
-            // Botão de compartilhar regras
             document.getElementById('share-rules').addEventListener('click', function() {
+                createParticles(this, 30, ['📢', '📜', '✨', '🔥'], ['#00f0ff', '#2ec4b6']);
+                
+                const shareData = {
+                    title: 'Panela Esteli22 - Grupo Exclusivo',
+                    text: 'Entre no nosso grupo e faça parte da comunidade! Regras:\n\n1️⃣ Contribuir ou ralar\n2️⃣ Aprovou? Joga no grupo!\n3️⃣ Não explanar esquemas\n4️⃣ Chamar quem contribui\n5️⃣ Respeito sempre\n6️⃣ Sem flood/spam',
+                    url: 'https://chat.whatsapp.com/GcqSNb83GFS6waXdRlaFgi'
+                };
+                
                 if (navigator.share) {
-                    navigator.share({
-                        title: 'Regras do Grupo Panela Esteli22',
-                        text: 'Confira as regras do nosso grupo exclusivo!',
-                        url: window.location.href
-                    }).catch(err => {
-                        console.log('Erro ao compartilhar:', err);
+                    navigator.share(shareData).catch(err => {
+                        // Fallback para copiar o link
+                        navigator.clipboard.writeText(shareData.url);
+                        alert('Link copiado! Cole no WhatsApp para compartilhar!');
                     });
                 } else {
-                    // Fallback para copiar o link
-                    navigator.clipboard.writeText(window.location.href);
-                    alert('Link copiado para a área de transferência!');
+                    navigator.clipboard.writeText(shareData.url);
+                    alert('Link copiado! Cole no WhatsApp para compartilhar!');
                 }
-                
-                createParticles(this, 30, ['📢', '📜', '✨', '🚀']);
             });
             
-            // Efeito nas cartas de regras
+            // Efeito hover nas cartas
             document.querySelectorAll('.rule-card').forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    createParticles(this, 5, ['✨', '🌟', '💎']);
+                card.addEventListener('mouseenter', () => {
+                    createParticles(card, 10, ['✨', '🌟', '💎']);
+                    gsap.to(card, {
+                        scale: 1.03,
+                        duration: 0.3
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        scale: 1,
+                        duration: 0.3
+                    });
                 });
             });
         });
