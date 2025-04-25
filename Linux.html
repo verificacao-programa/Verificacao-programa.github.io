@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>root@cyberai:~/card-generator#</title>
+    <title>CYBERCARD AI GENERATOR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg: #0a0a0a;
-            --terminal-bg: #121212;
+            --terminal-bg: rgba(18, 18, 18, 0.85);
             --text: #00ff9d;
             --text-dim: #00aa6d;
             --cursor: #00ff9d;
@@ -18,7 +18,7 @@
             --input-border: #003320;
             --button-bg: #002215;
             --button-hover: #00442a;
-            --card-bg: #00110a;
+            --card-bg: linear-gradient(135deg, #00110a 0%, #003320 100%);
             --card-border: #00aa6d;
             --success: #00ff9d;
             --error: #ff5555;
@@ -26,6 +26,8 @@
             --ai-response: #00ccff;
             --glow: 0 0 15px rgba(0, 255, 157, 0.3);
             --ai-glow: 0 0 15px rgba(0, 204, 255, 0.3);
+            --cyber-blue: #00f3ff;
+            --cyber-purple: #b300ff;
         }
 
         * {
@@ -57,6 +59,22 @@
             100% { transform: translateY(0px); }
         }
 
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 0.99;
+                text-shadow: 0 0 10px var(--cyber-blue);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4;
+                text-shadow: none;
+            }
+        }
+
+        @keyframes hologram {
+            0% { transform: rotateX(60deg) translateY(0); }
+            100% { transform: rotateX(60deg) translateY(-100%); }
+        }
+
         body {
             background-color: var(--bg);
             color: var(--text);
@@ -66,6 +84,7 @@
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(0, 80, 60, 0.1) 0%, transparent 25%),
                 radial-gradient(circle at 80% 70%, rgba(0, 150, 100, 0.1) 0%, transparent 25%);
+            min-height: 100vh;
         }
 
         /* Efeito de scanline (CRT) */
@@ -91,7 +110,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABGSURBVGhD7cExAQAwDMCg+zfd2VAKJPAk9qaqqjKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZP4fvgDX0g2xqyVQZQAAAABJRU5ErkJggg==');
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABGSURBVGhD7cExAQAwDMCg+zfd2VAKJPAk9iZVVVVlMplMJpPJZDKZTCaTyWQymUwmk8lkMplMJpPJZDKZTCaTyWQymUwmk8n8P3wBrqUbYldLoMoAAAAASUVORK5CYII=');
             opacity: 0.03;
             pointer-events: none;
             z-index: 100;
@@ -104,18 +123,21 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(0, 255, 157, 0.05) 0%, transparent 70%);
             z-index: -1;
+            filter: blur(10px);
         }
 
         .circle-1 {
             top: -100px;
             left: -100px;
             animation: pulse 8s infinite ease-in-out;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.05) 0%, transparent 70%);
         }
 
         .circle-2 {
             bottom: -150px;
             right: -100px;
             animation: pulse 10s infinite ease-in-out reverse;
+            background: radial-gradient(circle, rgba(179, 0, 255, 0.05) 0%, transparent 70%);
         }
 
         .container {
@@ -128,8 +150,10 @@
             position: relative;
             margin-top: 3rem;
             margin-bottom: 3rem;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(5px);
             border-radius: 5px;
+            border-image: linear-gradient(45deg, var(--cyber-blue), var(--cyber-purple)) 1;
+            overflow: hidden;
         }
 
         .container::before {
@@ -143,6 +167,26 @@
             font-weight: bold;
             font-size: 0.9rem;
             text-shadow: var(--glow);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            z-index: 2;
+        }
+
+        .container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 243, 255, 0.03) 0%,
+                rgba(179, 0, 255, 0.03) 100%
+            );
+            pointer-events: none;
+            z-index: -1;
         }
 
         header {
@@ -159,7 +203,7 @@
             left: 0;
             width: 100px;
             height: 2px;
-            background: var(--success);
+            background: linear-gradient(to right, var(--cyber-blue), var(--cyber-purple));
             box-shadow: var(--glow);
         }
 
@@ -171,6 +215,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            animation: flicker 8s linear infinite;
         }
 
         h1::before {
@@ -192,6 +237,8 @@
             box-shadow: var(--ai-glow);
             animation: float 6s ease-in-out infinite;
             position: relative;
+            border-radius: 0 5px 5px 0;
+            overflow: hidden;
         }
 
         .ai-response::before {
@@ -204,6 +251,25 @@
             color: var(--ai-response);
             font-size: 0.7rem;
             text-shadow: var(--ai-glow);
+            border: 1px solid var(--ai-response);
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .ai-response::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                rgba(0, 204, 255, 0.1),
+                transparent
+            );
+            pointer-events: none;
         }
 
         .card-container {
@@ -214,6 +280,7 @@
             position: relative;
             box-shadow: var(--glow);
             border-radius: 5px;
+            overflow: hidden;
         }
 
         .card-container::before {
@@ -226,6 +293,9 @@
             font-size: 0.7rem;
             color: var(--text-dim);
             text-shadow: var(--glow);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
         }
 
         .card {
@@ -237,6 +307,11 @@
             border-radius: 3px;
             position: relative;
             overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 50, 40, 0.3) 0%,
+                rgba(0, 20, 15, 0.5) 100%
+            );
         }
 
         .card::before {
@@ -252,6 +327,22 @@
                 transparent);
         }
 
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                transparent,
+                rgba(0, 255, 157, 0.05),
+                transparent
+            );
+            pointer-events: none;
+        }
+
         .card-number {
             font-size: 1.3rem;
             letter-spacing: 2px;
@@ -260,6 +351,20 @@
             text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
             font-weight: bold;
             font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .card-number::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, 
+                transparent, 
+                var(--success), 
+                transparent);
         }
 
         .card-details {
@@ -268,6 +373,7 @@
             margin-top: 1rem;
             font-size: 0.9rem;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .card-type {
@@ -281,6 +387,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 0.2rem 0.5rem;
             border-radius: 3px;
+            border: 1px solid var(--warning);
         }
 
         .form-group {
@@ -321,6 +428,7 @@
             outline: none;
             border-color: var(--success);
             box-shadow: var(--glow);
+            background: rgba(0, 30, 20, 0.5);
         }
 
         .row {
@@ -390,6 +498,24 @@
             display: none;
             box-shadow: var(--glow);
             border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                transparent,
+                rgba(0, 255, 157, 0.05),
+                transparent
+            );
+            pointer-events: none;
         }
 
         .result-title {
@@ -413,6 +539,15 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .result-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--success);
         }
 
         .result-label {
@@ -488,11 +623,28 @@
             box-shadow: var(--glow);
             border-radius: 5px;
             transition: all 0.3s;
+            overflow: hidden;
         }
 
         .generated-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 255, 157, 0.2);
+        }
+
+        .generated-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                transparent,
+                rgba(0, 255, 157, 0.05),
+                transparent
+            );
+            pointer-events: none;
         }
 
         .card-brand {
@@ -504,6 +656,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 0.2rem 0.5rem;
             border-radius: 3px;
+            border: 1px solid var(--warning);
         }
 
         /* Terminal de comando */
@@ -522,6 +675,9 @@
             font-size: 0.7rem;
             color: var(--text-dim);
             text-shadow: var(--glow);
+            border: 1px solid var(--card-border);
+            border-bottom: none;
+            border-radius: 3px 3px 0 0;
         }
 
         .command-input {
@@ -572,6 +728,127 @@
             opacity: 0.5;
         }
 
+        /* Efeito de aviso de segurança */
+        .security-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 30, 20, 0.8);
+            border: 1px solid var(--error);
+            padding: 1rem;
+            max-width: 300px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.3);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease-out;
+        }
+
+        .security-warning.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .security-warning h3 {
+            color: var(--error);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .security-warning h3::before {
+            content: "⚠";
+        }
+
+        .security-warning p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Modal de segurança */
+        .security-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .security-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--terminal-bg);
+            border: 1px solid var(--error);
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(255, 85, 85, 0.5);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            color: var(--error);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-accept {
+            background: var(--error);
+            color: white;
+        }
+
+        .modal-btn-accept:hover {
+            background: #ff3333;
+        }
+
+        .modal-btn-decline {
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text);
+        }
+
+        .modal-btn-decline:hover {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* Responsividade */
         @media (max-width: 768px) {
             .row {
                 flex-direction: column;
@@ -593,7 +870,24 @@
             button {
                 width: 100%;
                 margin-bottom: 0.8rem;
+                margin-right: 0;
             }
+
+            .container {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+                padding: 1rem;
+            }
+
+            .security-warning {
+                max-width: calc(100% - 40px);
+            }
+        }
+
+        /* Efeitos de foco para acessibilidade */
+        a:focus, button:focus, input:focus, select:focus {
+            outline: 2px solid var(--cyber-blue);
+            outline-offset: 2px;
         }
     </style>
 </head>
@@ -603,21 +897,40 @@
     <div class="cyber-circle circle-2"></div>
     <div class="particles" id="particles"></div>
 
+    <!-- Modal de segurança -->
+    <div class="security-modal" id="securityModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-shield-alt"></i> AVISO DE SEGURANÇA</h2>
+            <p>Este gerador cria números de cartões de crédito válidos apenas para fins de teste e desenvolvimento. Esses números não estão associados a contas reais e não podem ser usados para transações financeiras.</p>
+            <p>O uso desses números para atividades ilegais é estritamente proibido e pode resultar em consequências legais.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-accept" id="acceptBtn">ENTENDI E CONCORDO</button>
+                <button class="modal-btn modal-btn-decline" id="declineBtn">SAIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aviso flutuante de segurança -->
+    <div class="security-warning" id="securityWarning">
+        <h3>AVISO LEGAL</h3>
+        <p>Os cartões gerados são apenas para testes. Não utilize para transações reais. O uso indevido pode ter consequências legais.</p>
+    </div>
+
     <div class="container">
         <header>
-            <h1>CYBERCARD AI TERMINAL <span class="status valid">ONLINE</span></h1>
-            <p class="subtitle">> Advanced credit card generator with AI integration</p>
+            <h1>CYBERCARD AI GENERATOR <span class="status valid">SECURE</span></h1>
+            <p class="subtitle">> Advanced credit card generator for testing purposes</p>
         </header>
         
         <div class="ai-response" id="aiWelcome">
-            > Bem-vindo ao CyberCard AI Terminal. Digite <strong>help</strong> para ver os comandos disponíveis.
+            > Bem-vindo ao CyberCard AI Generator. Digite <strong>help</strong> para ver os comandos disponíveis.
             <br>> Para acessar o gerador, use o comando secreto.
         </div>
         
         <div class="command-line">
             <div class="command-input">
                 <span class="prompt">root@cyberai:~$</span>
-                <input type="text" id="command" placeholder="Digite seu comando...">
+                <input type="text" id="command" placeholder="Digite seu comando..." aria-label="Terminal command input">
                 <span id="cursor" class="cursor">_</span>
             </div>
         </div>
@@ -648,7 +961,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="bin">BIN (6-12 dígitos)</label>
-                        <input type="text" id="bin" placeholder="Ex: 411111, 511234" maxlength="12">
+                        <input type="text" id="bin" placeholder="Ex: 411111, 511234" maxlength="12" pattern="\d{6,12}" title="Digite 6 a 12 dígitos">
                     </div>
                 </div>
                 <div class="col">
@@ -680,13 +993,13 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="expiryDate">Data de Validade</label>
-                        <input type="text" id="expiryDate" placeholder="MM/AA" value="12/25">
+                        <input type="text" id="expiryDate" placeholder="MM/AA" value="12/25" pattern="\d{2}/\d{2}" title="Formato MM/AA">
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label for="cvv">CVV</label>
-                        <input type="text" id="cvv" placeholder="123" maxlength="4" value="123">
+                        <input type="text" id="cvv" placeholder="123" maxlength="4" value="123" pattern="\d{3,4}" title="3 ou 4 dígitos">
                     </div>
                 </div>
             </div>
@@ -747,6 +1060,10 @@
             const SECRET_COMMAND = "chklinux";
             
             // Elementos DOM
+            const securityModal = document.getElementById('securityModal');
+            const securityWarning = document.getElementById('securityWarning');
+            const acceptBtn = document.getElementById('acceptBtn');
+            const declineBtn = document.getElementById('declineBtn');
             const commandInput = document.getElementById('command');
             const aiWelcome = document.getElementById('aiWelcome');
             const generatorInterface = document.getElementById('generator-interface');
@@ -774,6 +1091,24 @@
             const resultLuhn = document.getElementById('resultLuhn');
             const multipleCardsResult = document.getElementById('multipleCardsResult');
             const cardsGrid = document.getElementById('cardsGrid');
+            
+            // Mostrar modal de segurança ao carregar
+            setTimeout(() => {
+                securityModal.classList.add('active');
+            }, 1000);
+            
+            // Aceitar termos
+            acceptBtn.addEventListener('click', () => {
+                securityModal.classList.remove('active');
+                setTimeout(() => {
+                    securityWarning.classList.add('show');
+                }, 1000);
+            });
+            
+            // Recusar termos - redirecionar
+            declineBtn.addEventListener('click', () => {
+                window.location.href = 'https://www.google.com';
+            });
             
             // Respostas da IA
             const aiResponses = {
@@ -827,12 +1162,17 @@
                     const duration = Math.random() * 20 + 10;
                     const delay = Math.random() * 10;
                     
+                    // Escolher uma cor cyberpunk
+                    const colors = ['#00ff9d', '#00f3ff', '#b300ff', '#ff00aa'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
                     particle.style.left = `${posX}%`;
                     particle.style.top = `${posY}%`;
                     particle.style.width = `${size}px`;
                     particle.style.height = `${size}px`;
                     particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
                     particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    particle.style.background = color;
                     
                     particlesContainer.appendChild(particle);
                 }
@@ -1195,6 +1535,7 @@
                 alert.style.fontFamily = 'Courier New, monospace';
                 alert.style.fontSize = '0.9rem';
                 alert.style.whiteSpace = 'nowrap';
+                alert.style.borderRadius = '3px';
                 
                 document.body.appendChild(alert);
                 
