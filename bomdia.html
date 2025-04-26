@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bom Dia, Princesa!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            transform: rotate(45deg);
+            animation: float 6s ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes float {
+            0% { transform: rotate(45deg) translateY(0) scale(1); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: rotate(45deg) translateY(-500px) scale(0.3); opacity: 0; }
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 85%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b81;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 30px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .date {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .flower {
+            font-size: 2rem;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bom Dia, Amor</h1>
+        <div class="flower">🌹</div>
+        <div class="message" id="message">Carregando sua mensagem especial...</div>
+        <div class="date" id="date"></div>
+    </div>
+
+    <script>
+        // Cria corações flutuantes
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+        
+        // Mensagens personalizadas para cada dia
+        const dailyMessages = [
+            { 
+                day: "Domingo",
+                message: "Meu amor, que seu domingo seja tão doce quanto seu sorriso. Hoje é dia de descansar e se preparar para a semana, mas lembre-se que mesmo no seu descanso, você ilumina meu mundo."
+            },
+            { 
+                day: "Segunda",
+                message: "Minha princesa, nova semana começando e eu já te imagino conquistando tudo o que deseja. Você é a mulher mais forte que conheço, e hoje será só mais um dia para mostrar todo seu brilho!"
+            },
+            { 
+                day: "Terça",
+                message: "Bom dia, meu amor! Se hoje estiver difícil, lembre-se que você é capaz de tudo. E se precisar, estou aqui para te apoiar em cada passo. Te amo mais que todas as estrelas do céu!"
+            },
+            { 
+                day: "Quarta",
+                message: "Querida, já estamos no meio da semana! Você está arrasando como sempre. Hoje é um ótimo dia para lembrar o quanto você é especial e o quanto me faz feliz só por existir."
+            },
+            { 
+                day: "Quinta",
+                message: "Meu sol, o fim de semana já está chegando! Mas antes, que tal aproveitar esse dia para fazer algo que te deixe feliz? Você merece toda a alegria do mundo, meu amor."
+            },
+            { 
+                day: "Sexta",
+                message: "Bom dia, minha linda! Hoje é seu dia de brilhar ainda mais! Sextou com todo seu charme e beleza que deixam meu coração acelerado todos os dias."
+            },
+            { 
+                day: "Sábado",
+                message: "Amor da minha vida, finalmente sábado! Dia de aproveitar cada momento, seja descansando ou fazendo o que mais gosta. Me conta depois como foi seu dia, adoro ouvir sua voz feliz."
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createHearts();
+            
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            
+            const todayMessage = dailyMessages[dayOfWeek];
+            
+            document.getElementById('message').textContent = todayMessage.message;
+            document.getElementById('date').textContent = `Hoje é ${todayMessage.day}, ${today.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+            
+            // Muda a flor de acordo com o dia
+            const flowers = ['🌷', '🌹', '💐', '🌸', '🌺', '🌻', '🏵️'];
+            document.querySelector('.flower').textContent = flowers[dayOfWeek];
+        });
+    </script>
+</body>
+</html>
