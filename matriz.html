@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATRIX GENERATOR PRO | Método Mikey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-color: #f8f9fa;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] {
+            --dark: #f8f9fa;
+            --light: #1a1a2e;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --text-color: #1a1a2e;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark), #16213e);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-copy-all {
+            background: linear-gradient(to right, #28a745, #20c997);
+        }
+
+        .results-box {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-family: monospace;
+            resize: vertical;
+            margin-top: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-right: 0.5rem;
+        }
+
+        .tab.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <h1>MATRIX GENERATOR PRO</h1>
+            <p class="subtitle">Método Mikey - Geração por Matriz</p>
+        </header>
+        
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" data-tab="generator">Gerador</div>
+                <div class="tab" data-tab="tutorial">Tutorial</div>
+            </div>
+            
+            <div class="tab-content active" id="generator">
+                <div class="input-group">
+                    <label>Número do Cartão Base</label>
+                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx" maxlength="16">
+                </div>
+                
+                <div class="input-group">
+                    <label>Data de Expiração (MM/AAAA)</label>
+                    <input type="text" id="expiry" placeholder="Ex: 07/2029">
+                </div>
+                
+                <div class="input-group">
+                    <label>Método de Geração</label>
+                    <select id="method">
+                        <option value="hyperbase">Hiper Base (8 dígitos fixos)</option>
+                        <option value="partial">Parcial (12 dígitos fixos)</option>
+                        <option value="full">Matriz Completa</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Quantidade a Gerar</label>
+                    <input type="number" id="quantity" value="50" min="1" max="1000">
+                </div>
+                
+                <button class="btn" id="generate-btn">Gerar Matriz</button>
+                
+                <div class="input-group" style="margin-top: 2rem;">
+                    <label>Resultados Gerados</label>
+                    <textarea class="results-box" id="results-box" readonly></textarea>
+                    <button class="btn btn-copy-all" id="copy-all-btn" style="margin-top: 0.5rem;">
+                        <i class="fas fa-copy"></i> Copiar Tudo
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="tutorial">
+                <h3>Método Mikey - Tutorial Rápido</h3>
+                <ol style="margin-top: 1rem; line-height: 2;">
+                    <li><strong>Pegue uma extra queimada</strong> (Ex: 455079000185xxxx|07|2029)</li>
+                    <li><strong>Crie uma hiperbase</strong> reduzindo dígitos fixos (Ex: 45507900xxxxxxxx)</li>
+                    <li><strong>Gere múltiplos cartões</strong> usando este gerador</li>
+                    <li><strong>Verifique os cartões</strong> em um checker confiável</li>
+                    <li><strong>Quando achar uma live</strong>, refine removendo 4-5 últimos dígitos</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Dark/Light Mode
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        });
+
+        // Lógica das Abas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Gerador de Cartões
+        document.getElementById('generate-btn').addEventListener('click', () => {
+            const cardBase = document.getElementById('card-number').value;
+            const expiry = document.getElementById('expiry').value;
+            const method = document.getElementById('method').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (!cardBase || !expiry) {
+                alert('⚠️ Preencha todos os campos!');
+                return;
+            }
+            
+            let results = '';
+            
+            for (let i = 0; i < quantity; i++) {
+                let generatedNumber;
+                
+                if (method === 'hyperbase') {
+                    const base = cardBase.substring(0, 8);
+                    generatedNumber = base + generateRandomDigits(8);
+                } else if (method === 'partial') {
+                    const base = cardBase.substring(0, 12);
+                    generatedNumber = base + generateRandomDigits(4);
+                } else {
+                    generatedNumber = generateRandomDigits(16);
+                }
+                
+                const cvv = generateRandomDigits(3);
+                const [month, year] = expiry.split('/');
+                results += `${generatedNumber}|${month}|${year}|${cvv}\n`;
+            }
+            
+            document.getElementById('results-box').value = results.trim();
+        });
+        
+        // Copiar Tudo
+        document.getElementById('copy-all-btn').addEventListener('click', () => {
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.select();
+            document.execCommand('copy');
+            
+            const btn = document.getElementById('copy-all-btn');
+            btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-copy"></i> Copiar Tudo';
+            }, 2000);
+        });
+        
+        // Gerar dígitos aleatórios
+        function generateRandomDigits(length) {
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += Math.floor(Math.random() * 10);
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
