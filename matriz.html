@@ -3,172 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATRIX GENERATOR PRO | Método Mikey</title>
+    <title>⚡ MATRIX AI GENERATOR ULTRA | Método Mikey 3.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --dark: #1a1a2e;
-            --light: #f8f9fa;
-            --success: #28a745;
-            --danger: #dc3545;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text-color: #f8f9fa;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --quantum-purple: #8a2be2;
+            --neon-blue: #00f5ff;
+            --cyber-green: #00ff9d;
+            --dark-matter: #0f0c29;
+            --void-black: #000000;
+            --hacker-text: #00ff41;
+            --matrix-green: #00ff41;
+            --error-red: #ff3860;
+            --warning-yellow: #ffdd57;
+            --card-bg: rgba(15, 12, 41, 0.8);
+            --text-color: #e0e0e0;
+            --glow: 0 0 15px rgba(138, 43, 226, 0.7);
+            --cyber-border: 1px solid rgba(0, 245, 255, 0.3);
         }
 
         [data-theme="light"] {
-            --dark: #f8f9fa;
-            --light: #1a1a2e;
-            --card-bg: rgba(0, 0, 0, 0.05);
-            --text-color: #1a1a2e;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --dark-matter: #f0f0f0;
+            --void-black: #ffffff;
+            --hacker-text: #0066ff;
+            --text-color: #333333;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --glow: 0 0 10px rgba(0, 245, 255, 0.3);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background 0.3s, color 0.3s;
+            transition: all 0.3s ease;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--dark), #16213e);
+            font-family: 'Courier New', monospace;
+            background: radial-gradient(circle at center, var(--dark-matter), var(--void-black));
             color: var(--text-color);
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             position: relative;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--quantum-purple), var(--neon-blue));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: var(--glow);
         }
 
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .theme-toggle {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        .card {
+        .cyber-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .input-group {
+            padding: 1.5rem;
+            box-shadow: var(--glow);
             margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            margin-right: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-copy-all {
-            background: linear-gradient(to right, #28a745, #20c997);
-        }
-
-        .results-box {
-            width: 100%;
-            height: 300px;
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            font-family: monospace;
-            resize: vertical;
-            margin-top: 1rem;
+            border: var(--cyber-border);
         }
 
         .tabs {
             display: flex;
             margin-bottom: 1.5rem;
+            overflow-x: auto;
         }
 
         .tab {
             padding: 0.8rem 1.5rem;
             cursor: pointer;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.3);
             margin-right: 0.5rem;
+            border-radius: 8px 8px 0 0;
+            white-space: nowrap;
         }
 
         .tab.active {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
+            background: linear-gradient(135deg, var(--quantum-purple), var(--neon-blue));
+            color: black;
+            font-weight: bold;
         }
 
         .tab-content {
@@ -179,17 +108,111 @@
             display: block;
         }
 
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-blue);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: var(--cyber-border);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .cyber-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--quantum-purple), var(--neon-blue));
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-box {
+            width: 100%;
+            height: 200px;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border: var(--cyber-border);
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: var(--cyber-border);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--neon-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .analysis-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .tutorial-content {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: var(--cyber-border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tutorial-content h3 {
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+            border-bottom: var(--cyber-border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tutorial-content ol {
+            padding-left: 1.5rem;
+        }
+
+        .tutorial-content li {
+            margin-bottom: 0.8rem;
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .analysis-results {
+                grid-template-columns: 1fr;
             }
             
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .tab {
-                margin-bottom: 0.5rem;
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -197,28 +220,26 @@
 <body>
     <div class="container">
         <header>
-            <button class="theme-toggle" id="theme-toggle">
-                <i class="fas fa-moon"></i>
-            </button>
-            <h1>MATRIX GENERATOR PRO</h1>
-            <p class="subtitle">Método Mikey - Geração por Matriz</p>
+            <h1>MATRIX AI GENERATOR ULTRA</h1>
+            <p class="subtitle">⚡ Método Mikey 3.0 | Geração Quântica por IA</p>
         </header>
         
-        <div class="card">
+        <div class="cyber-card">
             <div class="tabs">
                 <div class="tab active" data-tab="generator">Gerador</div>
+                <div class="tab" data-tab="analysis">Análise</div>
                 <div class="tab" data-tab="tutorial">Tutorial</div>
             </div>
             
             <div class="tab-content active" id="generator">
                 <div class="input-group">
                     <label>Número do Cartão Base</label>
-                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx" maxlength="16">
+                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx">
                 </div>
                 
                 <div class="input-group">
                     <label>Data de Expiração (MM/AAAA)</label>
-                    <input type="text" id="expiry" placeholder="Ex: 07/2029">
+                    <input type="text" id="expiry" placeholder="Deixe em branco para aleatório">
                 </div>
                 
                 <div class="input-group">
@@ -227,54 +248,91 @@
                         <option value="hyperbase">Hiper Base (8 dígitos fixos)</option>
                         <option value="partial">Parcial (12 dígitos fixos)</option>
                         <option value="full">Matriz Completa</option>
+                        <option value="smart">Modo Inteligente</option>
                     </select>
                 </div>
                 
                 <div class="input-group">
                     <label>Quantidade a Gerar</label>
-                    <input type="number" id="quantity" value="50" min="1" max="1000">
+                    <input type="number" id="quantity" value="100" min="1" max="10000">
                 </div>
                 
-                <button class="btn" id="generate-btn">Gerar Matriz</button>
+                <button class="cyber-btn" id="generate-btn">Gerar Matriz</button>
                 
-                <div class="input-group" style="margin-top: 2rem;">
+                <div class="input-group">
                     <label>Resultados Gerados</label>
                     <textarea class="results-box" id="results-box" readonly></textarea>
-                    <button class="btn btn-copy-all" id="copy-all-btn" style="margin-top: 0.5rem;">
-                        <i class="fas fa-copy"></i> Copiar Tudo
-                    </button>
+                    <button class="cyber-btn" id="copy-all-btn">Copiar Tudo</button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="analysis">
+                <div class="input-group">
+                    <label>Cole os cartões para análise</label>
+                    <textarea class="results-box" id="analysis-box" placeholder="Cole aqui os cartões gerados..."></textarea>
+                    <button class="cyber-btn" id="run-analysis-btn">Analisar Cartões</button>
+                </div>
+                
+                <div id="analysis-results" style="display: none;">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-cards">0</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="valid-luhn">0%</div>
+                            <div class="stat-label">Válidos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-results">
+                        <div>
+                            <label>Cartões Válidos (Luhn)</label>
+                            <textarea class="results-box" id="valid-cards-box" readonly></textarea>
+                            <button class="cyber-btn" id="copy-valid-btn">Copiar Válidos</button>
+                        </div>
+                        <div>
+                            <label>Cartões Inválidos</label>
+                            <textarea class="results-box" id="invalid-cards-box" readonly></textarea>
+                            <button class="cyber-btn" id="copy-invalid-btn">Copiar Inválidos</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="tab-content" id="tutorial">
-                <h3>Método Mikey - Tutorial Rápido</h3>
-                <ol style="margin-top: 1rem; line-height: 2;">
-                    <li><strong>Pegue uma extra queimada</strong> (Ex: 455079000185xxxx|07|2029)</li>
-                    <li><strong>Crie uma hiperbase</strong> reduzindo dígitos fixos (Ex: 45507900xxxxxxxx)</li>
-                    <li><strong>Gere múltiplos cartões</strong> usando este gerador</li>
-                    <li><strong>Verifique os cartões</strong> em um checker confiável</li>
-                    <li><strong>Quando achar uma live</strong>, refine removendo 4-5 últimos dígitos</li>
-                </ol>
+                <div class="tutorial-content">
+                    <h3><i class="fas fa-graduation-cap"></i> MÉTODO MIKEY 3.0 - TUTORIAL</h3>
+                    <ol>
+                        <li><strong>Obtenha uma base inicial</strong> - Pode ser um cartão queimado ou um BIN conhecido</li>
+                        <li><strong>Use o gerador de matriz</strong> para criar variações:
+                            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                                <li><strong>Hiper Base:</strong> Mantém os primeiros 8 dígitos fixos</li>
+                                <li><strong>Parcial:</strong> Mantém os primeiros 12 dígitos fixos</li>
+                                <li><strong>Completa:</strong> Gera todas as combinações possíveis</li>
+                            </ul>
+                        </li>
+                        <li><strong>Verifique os cartões</strong> em um checker confiável</li>
+                        <li><strong>Analise os resultados</strong> na aba de Análise para identificar padrões</li>
+                        <li><strong>Refine sua matriz</strong> com base nos dados coletados</li>
+                    </ol>
+                </div>
+                
+                <div class="tutorial-content">
+                    <h3><i class="fas fa-lightbulb"></i> DICAS AVANÇADAS</h3>
+                    <ul>
+                        <li>Comece com pequenas quantidades (50-100) para testar padrões</li>
+                        <li>Use a aba de Análise para separar os válidos antes de enviar para checkers</li>
+                        <li>Combine múltiplos BINs conhecidos para aumentar a diversidade</li>
+                        <li>Datas de expiração futuras têm maior taxa de sucesso</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Toggle Dark/Light Mode
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        
-        themeToggle.addEventListener('click', () => {
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                body.setAttribute('data-theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        });
-
-        // Lógica das Abas
+        // Sistema de abas
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -285,61 +343,124 @@
             });
         });
         
-        // Gerador de Cartões
-        document.getElementById('generate-btn').addEventListener('click', () => {
+        // Gerador de cartões
+        document.getElementById('generate-btn').addEventListener('click', function() {
             const cardBase = document.getElementById('card-number').value;
             const expiry = document.getElementById('expiry').value;
             const method = document.getElementById('method').value;
             const quantity = parseInt(document.getElementById('quantity').value);
             
-            if (!cardBase || !expiry) {
-                alert('⚠️ Preencha todos os campos!');
+            if (!cardBase) {
+                alert('Insira um número base!');
                 return;
             }
             
             let results = '';
             
             for (let i = 0; i < quantity; i++) {
-                let generatedNumber;
+                let cardNumber;
                 
                 if (method === 'hyperbase') {
-                    const base = cardBase.substring(0, 8);
-                    generatedNumber = base + generateRandomDigits(8);
+                    const base = cardBase.substring(0, 8).replace(/x/g, () => Math.floor(Math.random() * 10));
+                    cardNumber = base + generateRandomDigits(8);
                 } else if (method === 'partial') {
-                    const base = cardBase.substring(0, 12);
-                    generatedNumber = base + generateRandomDigits(4);
+                    const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
+                    cardNumber = base + generateRandomDigits(4);
                 } else {
-                    generatedNumber = generateRandomDigits(16);
+                    cardNumber = cardBase.replace(/x/g, () => Math.floor(Math.random() * 10));
+                    if (cardNumber.length < 16) {
+                        cardNumber += generateRandomDigits(16 - cardNumber.length);
+                    }
+                }
+                
+                let month, year;
+                if (expiry) {
+                    [month, year] = expiry.split('/');
+                } else {
+                    year = new Date().getFullYear() + Math.floor(Math.random() * 5);
+                    month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
                 }
                 
                 const cvv = generateRandomDigits(3);
-                const [month, year] = expiry.split('/');
-                results += `${generatedNumber}|${month}|${year}|${cvv}\n`;
+                results += `${cardNumber}|${month}|${year}|${cvv}\n`;
             }
             
             document.getElementById('results-box').value = results.trim();
         });
         
-        // Copiar Tudo
-        document.getElementById('copy-all-btn').addEventListener('click', () => {
-            const resultsBox = document.getElementById('results-box');
-            resultsBox.select();
-            document.execCommand('copy');
+        // Análise de cartões
+        document.getElementById('run-analysis-btn').addEventListener('click', function() {
+            const content = document.getElementById('analysis-box').value;
+            if (!content) {
+                alert('Cole alguns cartões primeiro!');
+                return;
+            }
             
-            const btn = document.getElementById('copy-all-btn');
-            btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-copy"></i> Copiar Tudo';
-            }, 2000);
+            const cards = content.trim().split('\n');
+            let validCards = '';
+            let invalidCards = '';
+            let validCount = 0;
+            
+            cards.forEach(card => {
+                const parts = card.split('|');
+                if (parts.length >= 1) {
+                    const cardNumber = parts[0].replace(/\D/g, '');
+                    if (validateLuhn(cardNumber)) {
+                        validCards += card + '\n';
+                        validCount++;
+                    } else {
+                        invalidCards += card + '\n';
+                    }
+                }
+            });
+            
+            document.getElementById('valid-cards-box').value = validCards.trim();
+            document.getElementById('invalid-cards-box').value = invalidCards.trim();
+            document.getElementById('total-cards').textContent = cards.length;
+            document.getElementById('valid-luhn').textContent = Math.round((validCount / cards.length) * 100) + '%';
+            document.getElementById('analysis-results').style.display = 'block';
         });
         
-        // Gerar dígitos aleatórios
+        // Funções auxiliares
         function generateRandomDigits(length) {
             let result = '';
             for (let i = 0; i < length; i++) {
                 result += Math.floor(Math.random() * 10);
             }
             return result;
+        }
+        
+        function validateLuhn(number) {
+            let sum = 0;
+            for (let i = 0; i < number.length; i++) {
+                let digit = parseInt(number[i]);
+                if ((number.length - i) % 2 === 0) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+            }
+            return sum % 10 === 0;
+        }
+        
+        // Botões de copiar
+        document.getElementById('copy-all-btn').addEventListener('click', function() {
+            copyToClipboard('results-box');
+        });
+        
+        document.getElementById('copy-valid-btn').addEventListener('click', function() {
+            copyToClipboard('valid-cards-box');
+        });
+        
+        document.getElementById('copy-invalid-btn').addEventListener('click', function() {
+            copyToClipboard('invalid-cards-box');
+        });
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            alert('Copiado para a área de transferência!');
         }
     </script>
 </body>
