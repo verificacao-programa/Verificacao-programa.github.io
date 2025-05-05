@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nubank Card AI | Gerador Inteligente</title>
+    <title>Nubank Card Genius | Gerador Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --nubank-purple: #820ad1;
             --purple-light: #9c4dff;
-            --purple-lighter: #e6d5ff;
+            --purple-lighter: #f0e5ff;
             --white: #ffffff;
-            --gray-50: #f9f9f9;
-            --gray-100: #f0f0f0;
-            --gray-200: #e0e0e0;
-            --gray-500: #777777;
-            --gray-800: #333333;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --gray-300: #e0e0e0;
+            --gray-500: #9e9e9e;
+            --gray-700: #616161;
+            --gray-800: #424242;
             --success: #00d455;
             --error: #ff5555;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 24px;
+            --radius-xxl: 32px;
         }
 
         * {
@@ -39,76 +42,83 @@
             background-color: var(--gray-50);
             color: var(--gray-800);
             min-height: 100vh;
-            padding: 16px;
             line-height: 1.5;
         }
 
         .container {
             max-width: 480px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 32px;
-            padding: 24px 0;
+            margin-bottom: 40px;
+            padding-top: 20px;
         }
 
         .logo {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--nubank-purple);
-            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--nubank-purple), var(--purple-light));
+            border-radius: var(--radius-xxl);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-size: 24px;
             font-weight: bold;
+            box-shadow: var(--shadow-md);
         }
 
         .logo-text {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            color: var(--nubank-purple);
+            background: linear-gradient(135deg, var(--nubank-purple), var(--purple-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             color: var(--gray-500);
-            font-size: 14px;
-            max-width: 280px;
+            font-size: 15px;
+            max-width: 300px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
         .card {
             background: var(--white);
             border-radius: var(--radius-lg);
             padding: 24px;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
             margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid var(--gray-200);
         }
 
         .card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
+            border-color: var(--purple-lighter);
         }
 
         .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
             border-bottom: 1px solid var(--gray-100);
         }
 
@@ -116,15 +126,25 @@
             font-size: 18px;
             font-weight: 600;
             color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            color: var(--nubank-purple);
         }
 
         .card-badge {
             background: var(--purple-lighter);
             color: var(--nubank-purple);
-            padding: 4px 12px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .input-group {
@@ -137,17 +157,21 @@
             font-size: 14px;
             font-weight: 500;
             color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .input-hint {
             font-size: 12px;
             color: var(--gray-500);
-            margin-top: 4px;
+            margin-top: 6px;
+            line-height: 1.5;
         }
 
         .input-field {
             width: 100%;
-            padding: 14px 16px;
+            padding: 15px 16px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--gray-200);
             background: var(--white);
@@ -167,32 +191,40 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 14px 24px;
+            padding: 16px 24px;
             border-radius: var(--radius-sm);
             border: none;
-            background: var(--nubank-purple);
+            background: linear-gradient(135deg, var(--nubank-purple), var(--purple-light));
             color: var(--white);
             font-weight: 600;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             width: 100%;
+            box-shadow: var(--shadow-sm);
         }
 
         .btn:hover {
-            background: var(--purple-light);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            opacity: 0.9;
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
             background: var(--white);
             color: var(--nubank-purple);
             border: 1px solid var(--gray-200);
+            box-shadow: none;
         }
 
         .btn-secondary:hover {
             background: var(--gray-50);
             border-color: var(--nubank-purple);
+            transform: translateY(-2px);
         }
 
         .results-box {
@@ -208,6 +240,12 @@
             margin-bottom: 16px;
             font-size: 13px;
             line-height: 1.6;
+            transition: all 0.2s;
+        }
+
+        .results-box:focus {
+            border-color: var(--nubank-purple);
+            box-shadow: 0 0 0 3px rgba(130, 10, 209, 0.1);
         }
 
         .progress-container {
@@ -215,7 +253,7 @@
             height: 6px;
             background-color: var(--gray-100);
             border-radius: 3px;
-            margin: 20px 0;
+            margin: 24px 0;
             overflow: hidden;
             display: none;
         }
@@ -225,14 +263,14 @@
             border-radius: 3px;
             background: linear-gradient(90deg, var(--nubank-purple), var(--purple-light));
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.4s ease-out;
         }
 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
@@ -241,10 +279,17 @@
             padding: 16px;
             text-align: center;
             box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-value {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--nubank-purple);
             margin-bottom: 4px;
@@ -261,11 +306,12 @@
         .stat-label {
             font-size: 12px;
             color: var(--gray-500);
+            font-weight: 500;
         }
 
         .tabs {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             border-bottom: 1px solid var(--gray-200);
         }
 
@@ -278,6 +324,9 @@
             margin-right: 4px;
             font-size: 14px;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tab:hover {
@@ -301,11 +350,11 @@
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -314,17 +363,18 @@
         }
 
         .smart-options {
-            background: rgba(130, 10, 209, 0.05);
+            background: rgba(130, 10, 209, 0.03);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 20px;
             margin-top: 16px;
             border-left: 3px solid var(--nubank-purple);
+            box-shadow: var(--shadow-sm);
         }
 
         .btn-group {
             display: flex;
             gap: 12px;
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
         .btn-group .btn {
@@ -338,21 +388,24 @@
             transform: translateX(-50%);
             background: var(--gray-800);
             color: var(--white);
-            padding: 12px 24px;
+            padding: 14px 24px;
             border-radius: var(--radius-xl);
             font-size: 14px;
             font-weight: 500;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             z-index: 1000;
             box-shadow: var(--shadow-lg);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            max-width: 90%;
+            pointer-events: none;
         }
 
         .toast.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
         }
 
         .toast.success {
@@ -369,20 +422,21 @@
         }
 
         .empty-icon {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             background: var(--purple-lighter);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 16px;
+            margin: 0 auto 20px;
             color: var(--nubank-purple);
-            font-size: 24px;
+            font-size: 28px;
+            box-shadow: var(--shadow-sm);
         }
 
         .empty-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--gray-800);
@@ -391,12 +445,36 @@
         .empty-text {
             font-size: 14px;
             color: var(--gray-500);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .chip {
+            display: inline-block;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .chip.purple {
+            background: var(--purple-lighter);
+            color: var(--nubank-purple);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 24px 0;
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 0;
+                padding: 16px;
             }
             
             .stats-grid {
@@ -410,6 +488,14 @@
             .card {
                 padding: 20px;
             }
+            
+            header {
+                margin-bottom: 32px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -417,10 +503,12 @@
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">AI</div>
-                <div class="logo-text">Card Generator</div>
+                <div class="logo-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="logo-text">Card Genius</div>
             </div>
-            <div class="subtitle">Gerador inteligente de cartões com validação Luhn</div>
+            <div class="subtitle">Gerador inteligente de cartões com validação avançada e análise de padrões</div>
         </header>
         
         <div class="card">
@@ -429,7 +517,7 @@
                     <i class="fas fa-bolt"></i> Gerador
                 </div>
                 <div class="tab" data-tab="analysis">
-                    <i class="fas fa-chart-bar"></i> Análise
+                    <i class="fas fa-chart-pie"></i> Análise
                 </div>
                 <div class="tab" data-tab="help">
                     <i class="fas fa-question-circle"></i> Ajuda
@@ -438,23 +526,36 @@
             
             <div class="tab-content active" id="generator">
                 <div class="card-header">
-                    <div class="card-title">Configurações de Geração</div>
-                    <div class="card-badge" id="method-badge">Hiper Base</div>
+                    <div class="card-title">
+                        <i class="fas fa-cog"></i> Configurações
+                    </div>
+                    <div class="card-badge" id="method-badge">
+                        <i class="fas fa-layer-group"></i> Hiper Base
+                    </div>
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Número do Cartão Base</label>
+                    <label class="input-label">
+                        <i class="fas fa-credit-card"></i> Número Base
+                    </label>
                     <input type="text" id="card-number" class="input-field" placeholder="Ex: 455079000185xxxx">
-                    <div class="input-hint">Use 'x' para dígitos variáveis. Ex: 455079xxxxxx1234</div>
+                    <div class="input-hint">
+                        Use <span class="chip">x</span> para dígitos variáveis. Exemplos: 
+                        <span class="chip">455079xxxxxx1234</span> ou <span class="chip">4111xxxxxxxx1111</span>
+                    </div>
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Data de Expiração (MM/AAAA)</label>
-                    <input type="text" id="expiry" class="input-field" placeholder="Deixe em branco para aleatório">
+                    <label class="input-label">
+                        <i class="far fa-calendar-alt"></i> Validade
+                    </label>
+                    <input type="text" id="expiry" class="input-field" placeholder="MM/AAAA (deixe em branco para aleatório)">
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Método de Geração</label>
+                    <label class="input-label">
+                        <i class="fas fa-project-diagram"></i> Método
+                    </label>
                     <select id="method" class="input-field">
                         <option value="hyperbase">Hiper Base (8 dígitos fixos)</option>
                         <option value="partial">Parcial (12 dígitos fixos)</option>
@@ -464,25 +565,31 @@
                 
                 <div id="smart-options" class="smart-options" style="display: none;">
                     <div class="input-group">
-                        <label class="input-label">Padrão de Geração</label>
+                        <label class="input-label">
+                            <i class="fas fa-shapes"></i> Padrão
+                        </label>
                         <select id="smart-pattern" class="input-field">
                             <option value="last4">Últimos 4 dígitos variáveis</option>
                             <option value="middle4">4 dígitos do meio variáveis</option>
-                            <option value="custom">Personalizado (use x's no campo base)</option>
+                            <option value="custom">Personalizado (use x's)</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">Nível de Variação</label>
+                        <label class="input-label">
+                            <i class="fas fa-sliders-h"></i> Variação
+                        </label>
                         <select id="variation-rate" class="input-field">
-                            <option value="low">Baixo (variação mínima)</option>
-                            <option value="medium" selected>Médio (balanceado)</option>
-                            <option value="high">Alto (máxima variação)</option>
+                            <option value="low">Baixa (conservador)</option>
+                            <option value="medium" selected>Média (balanceada)</option>
+                            <option value="high">Alta (agressiva)</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Quantidade a Gerar</label>
+                    <label class="input-label">
+                        <i class="fas fa-calculator"></i> Quantidade
+                    </label>
                     <input type="number" id="quantity" class="input-field" value="50" min="1" max="5000">
                 </div>
                 
@@ -495,14 +602,16 @@
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Resultados Gerados</label>
-                    <textarea class="results-box" id="results-box" readonly></textarea>
+                    <label class="input-label">
+                        <i class="fas fa-list-ol"></i> Resultados
+                    </label>
+                    <textarea class="results-box" id="results-box" placeholder="Os cartões gerados aparecerão aqui..." readonly></textarea>
                     <div class="btn-group">
                         <button class="btn" id="copy-all-btn">
-                            <i class="fas fa-copy"></i> Copiar Tudo
+                            <i class="fas fa-copy"></i> Copiar
                         </button>
                         <button class="btn btn-secondary" id="clear-btn">
-                            <i class="fas fa-trash"></i> Limpar
+                            <i class="fas fa-broom"></i> Limpar
                         </button>
                     </div>
                 </div>
@@ -510,15 +619,21 @@
             
             <div class="tab-content" id="analysis">
                 <div class="card-header">
-                    <div class="card-title">Análise de Cartões</div>
-                    <div class="card-badge">Luhn Check</div>
+                    <div class="card-title">
+                        <i class="fas fa-chart-line"></i> Análise
+                    </div>
+                    <div class="card-badge">
+                        <i class="fas fa-check-circle"></i> Luhn Check
+                    </div>
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Cole os cartões para análise</label>
+                    <label class="input-label">
+                        <i class="fas fa-paste"></i> Cole os cartões
+                    </label>
                     <textarea class="results-box" id="analysis-box" placeholder="Cole aqui os cartões no formato: NÚMERO|MM|AAAA|CVV"></textarea>
                     <button class="btn" id="run-analysis-btn">
-                        <i class="fas fa-search"></i> Analisar Cartões
+                        <i class="fas fa-search"></i> Analisar Agora
                     </button>
                 </div>
                 
@@ -526,27 +641,29 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-value" id="total-cards">0</div>
-                            <div class="stat-label">Total</div>
+                            <div class="stat-label">Total de Cartões</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value valid" id="valid-luhn">0%</div>
-                            <div class="stat-label">Válidos</div>
+                            <div class="stat-label">Válidos (Luhn)</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value" id="unique-cards">0</div>
-                            <div class="stat-label">Únicos</div>
+                            <div class="stat-label">Cartões Únicos</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-value" id="common-bin">-</div>
-                            <div class="stat-label">BIN Comum</div>
+                            <div class="stat-label">BIN Mais Comum</div>
                         </div>
                     </div>
                     
                     <div class="input-group">
-                        <label class="input-label">Cartões Válidos (Luhn)</label>
+                        <label class="input-label">
+                            <i class="fas fa-check-double"></i> Válidos
+                        </label>
                         <textarea class="results-box" id="valid-cards-box" readonly></textarea>
                         <button class="btn" id="copy-valid-btn">
-                            <i class="fas fa-copy"></i> Copiar Válidos
+                            <i class="fas fa-clipboard-check"></i> Copiar Válidos
                         </button>
                     </div>
                 </div>
@@ -556,43 +673,89 @@
                         <i class="fas fa-chart-pie"></i>
                     </div>
                     <div class="empty-title">Nenhum dado para analisar</div>
-                    <div class="empty-text">Cole os cartões gerados no campo acima e clique em "Analisar Cartões"</div>
+                    <div class="empty-text">Cole os cartões gerados no campo acima e clique em "Analisar Agora" para ver estatísticas detalhadas e filtrar cartões válidos.</div>
+                    <button class="btn btn-secondary" onclick="document.querySelector('.tab[data-tab=\'generator\']').click()">
+                        <i class="fas fa-bolt"></i> Gerar Cartões Primeiro
+                    </button>
                 </div>
             </div>
             
             <div class="tab-content" id="help">
                 <div class="card-header">
-                    <div class="card-title">Como usar o gerador</div>
-                    <div class="card-badge">Guia</div>
+                    <div class="card-title">
+                        <i class="fas fa-question-circle"></i> Como Usar
+                    </div>
+                    <div class="card-badge">
+                        <i class="fas fa-graduation-cap"></i> Guia
+                    </div>
                 </div>
                 
                 <div class="input-group">
-                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple);">Métodos de Geração</h3>
+                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-layer-group"></i> Métodos de Geração
+                    </h3>
                     
                     <div style="margin-bottom: 24px;">
-                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Hiper Base (8 dígitos fixos)</h4>
-                        <p style="font-size: 14px; color: var(--gray-500); margin-bottom: 16px;">
-                            Mantém os primeiros 8 dígitos fixos e varia os últimos 8. Ideal quando você conhece o BIN completo (6 dígitos) e mais 2 dígitos.
-                        </p>
+                        <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: var(--purple-lighter); color: var(--nubank-purple); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-cube" style="font-size: 12px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px; font-size: 15px; font-weight: 600;">Hiper Base (8 dígitos fixos)</h4>
+                                <p style="font-size: 14px; color: var(--gray-500);">
+                                    Mantém os primeiros 8 dígitos fixos e varia os últimos 8. Ideal quando você conhece o BIN completo (6 dígitos) e mais 2 dígitos subsequentes.
+                                </p>
+                            </div>
+                        </div>
                         
-                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Parcial (12 dígitos fixos)</h4>
-                        <p style="font-size: 14px; color: var(--gray-500); margin-bottom: 16px;">
-                            Mantém os primeiros 12 dígitos fixos e varia os últimos 4. Use quando tiver quase o cartão completo, faltando apenas os últimos dígitos.
-                        </p>
+                        <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: var(--purple-lighter); color: var(--nubank-purple); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-cubes" style="font-size: 12px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px; font-size: 15px; font-weight: 600;">Parcial (12 dígitos fixos)</h4>
+                                <p style="font-size: 14px; color: var(--gray-500);">
+                                    Mantém os primeiros 12 dígitos fixos e varia os últimos 4. Use quando tiver quase o cartão completo, faltando apenas os últimos dígitos.
+                                </p>
+                            </div>
+                        </div>
                         
-                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Modo Inteligente</h4>
-                        <p style="font-size: 14px; color: var(--gray-500);">
-                            Analisa automaticamente o padrão do seu cartão base e sugere a melhor estratégia de geração. Detecta a posição dos dígitos conhecidos e otimiza a variação.
-                        </p>
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
+                            <div style="background: var(--purple-lighter); color: var(--nubank-purple); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-brain" style="font-size: 12px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin-bottom: 4px; font-size: 15px; font-weight: 600;">Modo Inteligente</h4>
+                                <p style="font-size: 14px; color: var(--gray-500);">
+                                    Analisa automaticamente o padrão do seu cartão base e sugere a melhor estratégia de geração. Detecta a posição dos dígitos conhecidos e otimiza a variação para máxima eficiência.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     
-                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple);">Dicas Avançadas</h3>
-                    <div style="background: var(--gray-50); padding: 16px; border-radius: var(--radius-md);">
+                    <div class="divider"></div>
+                    
+                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-lightbulb"></i> Dicas Profissionais
+                    </h3>
+                    <div style="background: rgba(130, 10, 209, 0.03); padding: 16px; border-radius: var(--radius-md); border-left: 3px solid var(--nubank-purple);">
                         <ul style="font-size: 14px; color: var(--gray-500); margin-left: 20px;">
-                            <li style="margin-bottom: 8px;">Use datas de expiração futuras (2-3 anos) para melhores resultados</li>
-                            <li style="margin-bottom: 8px;">Comece com pequenas quantidades (50-100) para testar padrões</li>
-                            <li style="margin-bottom: 8px;">Combine múltiplos BINs conhecidos para aumentar a diversidade</li>
-                            <li>Use a análise Luhn para filtrar cartões inválidos antes de testar</li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;">
+                                <span class="chip purple">1</span>
+                                <span>Comece com pequenas quantidades (50-100) para testar padrões antes de gerar milhares</span>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;">
+                                <span class="chip purple">2</span>
+                                <span>Use datas de expiração futuras (2-3 anos) para melhores resultados</span>
+                            </li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;">
+                                <span class="chip purple">3</span>
+                                <span>Combine múltiplos BINs conhecidos para aumentar a diversidade</span>
+                            </li>
+                            <li style="display: flex; gap: 8px;">
+                                <span class="chip purple">4</span>
+                                <span>Use a análise Luhn para filtrar cartões inválidos antes de testar em checkers</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -606,7 +769,7 @@
         // Toast notification
         function showToast(message, type = '') {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
             toast.className = 'toast';
             if (type) toast.classList.add(type);
             toast.classList.add('show');
@@ -643,13 +806,13 @@
             const smartOptions = document.getElementById('smart-options');
             
             if (this.value === 'hyperbase') {
-                methodBadge.textContent = 'Hiper Base';
+                methodBadge.innerHTML = '<i class="fas fa-layer-group"></i> Hiper Base';
                 smartOptions.style.display = 'none';
             } else if (this.value === 'partial') {
-                methodBadge.textContent = 'Parcial';
+                methodBadge.innerHTML = '<i class="fas fa-cubes"></i> Parcial';
                 smartOptions.style.display = 'none';
             } else {
-                methodBadge.textContent = 'Inteligente';
+                methodBadge.innerHTML = '<i class="fas fa-brain"></i> Inteligente';
                 smartOptions.style.display = 'block';
                 analyzeCardPattern();
             }
@@ -701,6 +864,7 @@
             }
             
             this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
             progressContainer.style.display = 'block';
             progressBar.style.width = '0%';
             let results = '';
@@ -759,6 +923,7 @@
                 console.error(error);
             } finally {
                 this.disabled = false;
+                this.innerHTML = '<i class="fas fa-magic"></i> Gerar Cartões';
                 progressContainer.style.display = 'none';
             }
         });
@@ -905,11 +1070,11 @@
         
         // Botões de copiar
         document.getElementById('copy-all-btn').addEventListener('click', function() {
-            copyToClipboard('results-box', 'Todos os cartões copiados! ✅');
+            copyToClipboard('results-box', 'Todos os cartões copiados!');
         });
         
         document.getElementById('copy-valid-btn').addEventListener('click', function() {
-            copyToClipboard('valid-cards-box', 'Cartões válidos copiados! ✅');
+            copyToClipboard('valid-cards-box', 'Cartões válidos copiados!');
         });
         
         document.getElementById('clear-btn').addEventListener('click', function() {
