@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ MATRIX AI GENERATOR ULTRA | Método Mikey 3.0</title>
+    <title>⚡ MATRIX AI GENERATOR PRO | Método Mikey 3.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -138,6 +138,12 @@
             cursor: pointer;
             margin-right: 0.5rem;
             margin-bottom: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cyber-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.4);
         }
 
         .results-box {
@@ -151,6 +157,7 @@
             font-family: 'Courier New', monospace;
             resize: vertical;
             margin-bottom: 1rem;
+            overflow-y: auto;
         }
 
         .stats-container {
@@ -206,6 +213,35 @@
             margin-bottom: 0.8rem;
         }
 
+        .progress-container {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, var(--quantum-purple), var(--neon-blue));
+            width: 0%;
+            transition: width 0.3s ease;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            color: black;
+        }
+
+        .smart-options {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: var(--cyber-border);
+        }
+
         @media (max-width: 768px) {
             .analysis-results {
                 grid-template-columns: 1fr;
@@ -220,8 +256,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>MATRIX AI GENERATOR ULTRA</h1>
-            <p class="subtitle">⚡ Método Mikey 3.0 | Geração Quântica por IA</p>
+            <h1>MATRIX AI GENERATOR PRO</h1>
+            <p class="subtitle">⚡ Método Mikey 3.0 | Geração Inteligente</p>
         </header>
         
         <div class="cyber-card">
@@ -234,7 +270,7 @@
             <div class="tab-content active" id="generator">
                 <div class="input-group">
                     <label>Número do Cartão Base</label>
-                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx">
+                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx ou 455079xxxxxx1234">
                 </div>
                 
                 <div class="input-group">
@@ -247,22 +283,44 @@
                     <select id="method">
                         <option value="hyperbase">Hiper Base (8 dígitos fixos)</option>
                         <option value="partial">Parcial (12 dígitos fixos)</option>
-                        <option value="full">Matriz Completa</option>
                         <option value="smart">Modo Inteligente</option>
                     </select>
                 </div>
                 
+                <div id="smart-options" class="smart-options">
+                    <div class="input-group">
+                        <label>Padrão de Geração</label>
+                        <select id="smart-pattern">
+                            <option value="last4">Últimos 4 dígitos variáveis</option>
+                            <option value="middle4">4 dígitos do meio variáveis</option>
+                            <option value="custom">Personalizado (use x's no campo base)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Taxa de Variação</label>
+                        <select id="variation-rate">
+                            <option value="low">Baixa (variação mínima)</option>
+                            <option value="medium" selected>Média (balanceada)</option>
+                            <option value="high">Alta (máxima variação)</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <div class="input-group">
                     <label>Quantidade a Gerar</label>
-                    <input type="number" id="quantity" value="100" min="1" max="10000">
+                    <input type="number" id="quantity" value="100" min="1" max="5000">
                 </div>
                 
                 <button class="cyber-btn" id="generate-btn">Gerar Matriz</button>
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar">0%</div>
+                </div>
                 
                 <div class="input-group">
                     <label>Resultados Gerados</label>
                     <textarea class="results-box" id="results-box" readonly></textarea>
                     <button class="cyber-btn" id="copy-all-btn">Copiar Tudo</button>
+                    <button class="cyber-btn" id="clear-btn">Limpar Tudo</button>
                 </div>
             </div>
             
@@ -282,6 +340,14 @@
                         <div class="stat-card">
                             <div class="stat-value" id="valid-luhn">0%</div>
                             <div class="stat-label">Válidos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="unique-cards">0</div>
+                            <div class="stat-label">Únicos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="common-bin">-</div>
+                            <div class="stat-label">BIN Mais Comum</div>
                         </div>
                     </div>
                     
@@ -307,13 +373,13 @@
                         <li><strong>Obtenha uma base inicial</strong> - Pode ser um cartão queimado ou um BIN conhecido</li>
                         <li><strong>Use o gerador de matriz</strong> para criar variações:
                             <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                                <li><strong>Hiper Base:</strong> Mantém os primeiros 8 dígitos fixos</li>
-                                <li><strong>Parcial:</strong> Mantém os primeiros 12 dígitos fixos</li>
-                                <li><strong>Completa:</strong> Gera todas as combinações possíveis</li>
+                                <li><strong>Hiper Base:</strong> Mantém os primeiros 8 dígitos fixos (ideal para BINs conhecidos)</li>
+                                <li><strong>Parcial:</strong> Mantém os primeiros 12 dígitos fixos (para cartões parciais)</li>
+                                <li><strong>Inteligente:</strong> Analisa o padrão e otimiza a geração automaticamente</li>
                             </ul>
                         </li>
                         <li><strong>Verifique os cartões</strong> em um checker confiável</li>
-                        <li><strong>Analise os resultados</strong> na aba de Análise para identificar padrões</li>
+                        <li><strong>Analise os resultados</strong> para identificar padrões de validade</li>
                         <li><strong>Refine sua matriz</strong> com base nos dados coletados</li>
                     </ol>
                 </div>
@@ -321,10 +387,22 @@
                 <div class="tutorial-content">
                     <h3><i class="fas fa-lightbulb"></i> DICAS AVANÇADAS</h3>
                     <ul>
-                        <li>Comece com pequenas quantidades (50-100) para testar padrões</li>
-                        <li>Use a aba de Análise para separar os válidos antes de enviar para checkers</li>
+                        <li>O <strong>Modo Inteligente</strong> analisa seu cartão base e sugere o melhor padrão de geração</li>
+                        <li>Para melhores resultados, use cartões base com pelo menos 8 dígitos conhecidos</li>
                         <li>Combine múltiplos BINs conhecidos para aumentar a diversidade</li>
-                        <li>Datas de expiração futuras têm maior taxa de sucesso</li>
+                        <li>Datas de expiração futuras (2-3 anos) têm maior taxa de sucesso</li>
+                        <li>Use a análise para identificar BINs com maior taxa de validade</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-content">
+                    <h3><i class="fas fa-cogs"></i> FUNCIONAMENTO DO MODO INTELIGENTE</h3>
+                    <p>O modo inteligente analisa seu cartão base e:</p>
+                    <ul>
+                        <li>Identifica a posição dos dígitos conhecidos</li>
+                        <li>Seleciona automaticamente o melhor padrão de variação</li>
+                        <li>Otimiza a geração para maximizar cartões válidos</li>
+                        <li>Aplica o algoritmo Luhn automaticamente quando possível</li>
                     </ul>
                 </div>
             </div>
@@ -343,50 +421,169 @@
             });
         });
         
+        // Controle do modo inteligente
+        document.getElementById('method').addEventListener('change', function() {
+            const smartOptions = document.getElementById('smart-options');
+            if (this.value === 'smart') {
+                smartOptions.style.display = 'block';
+                analyzeCardPattern();
+            } else {
+                smartOptions.style.display = 'none';
+            }
+        });
+        
+        // Análise do padrão do cartão para o modo inteligente
+        function analyzeCardPattern() {
+            const cardBase = document.getElementById('card-number').value;
+            if (!cardBase) return;
+            
+            const xPositions = [];
+            for (let i = 0; i < cardBase.length; i++) {
+                if (cardBase[i] === 'x') xPositions.push(i);
+            }
+            
+            const smartPattern = document.getElementById('smart-pattern');
+            
+            // Se há menos de 4 x's, sugerir variação nos últimos dígitos
+            if (xPositions.length <= 4) {
+                smartPattern.value = 'last4';
+            } 
+            // Se os x's estão concentrados no meio (posições 4-11)
+            else if (xPositions.every(pos => pos >= 4 && pos <= 11)) {
+                smartPattern.value = 'middle4';
+            }
+            // Padrão personalizado se os x's estão em posições específicas
+            else {
+                smartPattern.value = 'custom';
+            }
+        }
+        
         // Gerador de cartões
-        document.getElementById('generate-btn').addEventListener('click', function() {
+        document.getElementById('generate-btn').addEventListener('click', async function() {
             const cardBase = document.getElementById('card-number').value;
             const expiry = document.getElementById('expiry').value;
             const method = document.getElementById('method').value;
             const quantity = parseInt(document.getElementById('quantity').value);
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
             
             if (!cardBase) {
                 alert('Insira um número base!');
                 return;
             }
             
+            progressContainer.style.display = 'block';
             let results = '';
+            const batchSize = 100;
+            const batches = Math.ceil(quantity / batchSize);
             
-            for (let i = 0; i < quantity; i++) {
-                let cardNumber;
+            for (let batch = 0; batch < batches; batch++) {
+                const currentBatchSize = Math.min(batchSize, quantity - (batch * batchSize));
+                let batchResults = '';
                 
-                if (method === 'hyperbase') {
-                    const base = cardBase.substring(0, 8).replace(/x/g, () => Math.floor(Math.random() * 10));
-                    cardNumber = base + generateRandomDigits(8);
-                } else if (method === 'partial') {
-                    const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
-                    cardNumber = base + generateRandomDigits(4);
-                } else {
-                    cardNumber = cardBase.replace(/x/g, () => Math.floor(Math.random() * 10));
-                    if (cardNumber.length < 16) {
-                        cardNumber += generateRandomDigits(16 - cardNumber.length);
+                for (let i = 0; i < currentBatchSize; i++) {
+                    let cardNumber;
+                    
+                    if (method === 'hyperbase') {
+                        const base = cardBase.substring(0, 8).replace(/x/g, () => Math.floor(Math.random() * 10));
+                        cardNumber = base + generateRandomDigits(8);
+                    } else if (method === 'partial') {
+                        const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
+                        cardNumber = base + generateRandomDigits(4);
+                    } else if (method === 'smart') {
+                        cardNumber = generateSmartCard(cardBase);
                     }
+                    
+                    // Aplicar algoritmo de Luhn se o cartão tiver 16 dígitos
+                    if (cardNumber.length === 16 && method !== 'smart') {
+                        cardNumber = applyLuhnAlgorithm(cardNumber);
+                    }
+                    
+                    let month, year;
+                    if (expiry) {
+                        [month, year] = expiry.split('/');
+                    } else {
+                        year = new Date().getFullYear() + Math.floor(Math.random() * 5);
+                        month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+                    }
+                    
+                    const cvv = generateRandomDigits(3);
+                    batchResults += `${cardNumber}|${month}|${year}|${cvv}\n`;
                 }
                 
-                let month, year;
-                if (expiry) {
-                    [month, year] = expiry.split('/');
-                } else {
-                    year = new Date().getFullYear() + Math.floor(Math.random() * 5);
-                    month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-                }
+                results += batchResults;
+                document.getElementById('results-box').value = results.trim();
                 
-                const cvv = generateRandomDigits(3);
-                results += `${cardNumber}|${month}|${year}|${cvv}\n`;
+                // Atualizar progresso
+                const progress = Math.min(100, Math.round(((batch + 1) * batchSize) / quantity * 100));
+                progressBar.style.width = `${progress}%`;
+                progressBar.textContent = `${progress}%`;
+                
+                // Dar tempo para a UI atualizar
+                await new Promise(resolve => setTimeout(resolve, 0));
             }
             
-            document.getElementById('results-box').value = results.trim();
+            progressContainer.style.display = 'none';
         });
+        
+        // Geração inteligente de cartões
+        function generateSmartCard(cardBase) {
+            const pattern = document.getElementById('smart-pattern').value;
+            const variationRate = document.getElementById('variation-rate').value;
+            let cardNumber = cardBase;
+            
+            // Determinar quantos dígitos variar baseado na taxa de variação
+            let variationCount;
+            switch(variationRate) {
+                case 'low': variationCount = 2; break;
+                case 'medium': variationCount = 4; break;
+                case 'high': variationCount = 6; break;
+                default: variationCount = 4;
+            }
+            
+            if (pattern === 'last4') {
+                // Manter tudo exceto os últimos 4 dígitos
+                const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
+                cardNumber = base + generateRandomDigits(4);
+            } else if (pattern === 'middle4') {
+                // Manter primeiros 6 e últimos 6 dígitos
+                const firstPart = cardBase.substring(0, 6).replace(/x/g, () => Math.floor(Math.random() * 10));
+                const lastPart = cardBase.substring(12).replace(/x/g, () => Math.floor(Math.random() * 10));
+                cardNumber = firstPart + generateRandomDigits(4) + lastPart;
+            } else { // custom
+                // Substituir todos os x's por dígitos aleatórios
+                cardNumber = cardBase.replace(/x/g, () => Math.floor(Math.random() * 10));
+            }
+            
+            // Garantir que o cartão tenha 16 dígitos
+            if (cardNumber.length < 16) {
+                cardNumber += generateRandomDigits(16 - cardNumber.length);
+            } else if (cardNumber.length > 16) {
+                cardNumber = cardNumber.substring(0, 16);
+            }
+            
+            // Aplicar Luhn para garantir validade
+            return applyLuhnAlgorithm(cardNumber);
+        }
+        
+        // Aplicar algoritmo de Luhn
+        function applyLuhnAlgorithm(number) {
+            // Remover o último dígito (checksum)
+            const base = number.substring(0, 15);
+            let sum = 0;
+            
+            for (let i = 0; i < base.length; i++) {
+                let digit = parseInt(base[i]);
+                if ((i % 2) === 0) { // posições ímpares (0-indexed)
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+            }
+            
+            const checksum = (10 - (sum % 10)) % 10;
+            return base + checksum;
+        }
         
         // Análise de cartões
         document.getElementById('run-analysis-btn').addEventListener('click', function() {
@@ -400,24 +597,45 @@
             let validCards = '';
             let invalidCards = '';
             let validCount = 0;
+            const uniqueCards = new Set();
+            const binCount = {};
             
             cards.forEach(card => {
                 const parts = card.split('|');
                 if (parts.length >= 1) {
                     const cardNumber = parts[0].replace(/\D/g, '');
+                    
+                    // Contar BINs (primeiros 6 dígitos)
+                    const bin = cardNumber.substring(0, 6);
+                    binCount[bin] = (binCount[bin] || 0) + 1;
+                    
                     if (validateLuhn(cardNumber)) {
                         validCards += card + '\n';
                         validCount++;
                     } else {
                         invalidCards += card + '\n';
                     }
+                    
+                    uniqueCards.add(cardNumber);
                 }
             });
+            
+            // Encontrar BIN mais comum
+            let commonBin = '-';
+            let maxCount = 0;
+            for (const bin in binCount) {
+                if (binCount[bin] > maxCount) {
+                    maxCount = binCount[bin];
+                    commonBin = bin;
+                }
+            }
             
             document.getElementById('valid-cards-box').value = validCards.trim();
             document.getElementById('invalid-cards-box').value = invalidCards.trim();
             document.getElementById('total-cards').textContent = cards.length;
             document.getElementById('valid-luhn').textContent = Math.round((validCount / cards.length) * 100) + '%';
+            document.getElementById('unique-cards').textContent = uniqueCards.size;
+            document.getElementById('common-bin').textContent = commonBin;
             document.getElementById('analysis-results').style.display = 'block';
         });
         
@@ -431,6 +649,8 @@
         }
         
         function validateLuhn(number) {
+            if (number.length !== 16) return false;
+            
             let sum = 0;
             for (let i = 0; i < number.length; i++) {
                 let digit = parseInt(number[i]);
@@ -456,12 +676,29 @@
             copyToClipboard('invalid-cards-box');
         });
         
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            document.getElementById('results-box').value = '';
+        });
+        
         function copyToClipboard(elementId) {
             const element = document.getElementById(elementId);
             element.select();
             document.execCommand('copy');
-            alert('Copiado para a área de transferência!');
+            
+            // Feedback visual
+            const originalText = element.value;
+            element.value = "✅ Copiado para a área de transferência!";
+            setTimeout(() => {
+                element.value = originalText;
+            }, 1500);
         }
+        
+        // Análise automática do padrão quando o cartão base é alterado
+        document.getElementById('card-number').addEventListener('input', function() {
+            if (document.getElementById('method').value === 'smart') {
+                analyzeCardPattern();
+            }
+        });
     </script>
 </body>
 </html>
