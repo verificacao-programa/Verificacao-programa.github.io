@@ -3,252 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ MATRIX AI GENERATOR PRO | Método Mikey 3.0</title>
+    <title>Nubank Card AI | Gerador Inteligente</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --quantum-purple: #8a2be2;
-            --neon-blue: #00f5ff;
-            --cyber-green: #00ff9d;
-            --dark-matter: #0f0c29;
-            --void-black: #000000;
-            --hacker-text: #00ff41;
-            --matrix-green: #00ff41;
-            --error-red: #ff3860;
-            --warning-yellow: #ffdd57;
-            --card-bg: rgba(15, 12, 41, 0.8);
-            --text-color: #e0e0e0;
-            --glow: 0 0 15px rgba(138, 43, 226, 0.7);
-            --cyber-border: 1px solid rgba(0, 245, 255, 0.3);
-        }
-
-        [data-theme="light"] {
-            --dark-matter: #f0f0f0;
-            --void-black: #ffffff;
-            --hacker-text: #0066ff;
-            --text-color: #333333;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --glow: 0 0 10px rgba(0, 245, 255, 0.3);
+            --nubank-purple: #820ad1;
+            --purple-light: #9c4dff;
+            --purple-lighter: #e6d5ff;
+            --white: #ffffff;
+            --gray-50: #f9f9f9;
+            --gray-100: #f0f0f0;
+            --gray-200: #e0e0e0;
+            --gray-500: #777777;
+            --gray-800: #333333;
+            --success: #00d455;
+            --error: #ff5555;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: radial-gradient(circle at center, var(--dark-matter), var(--void-black));
-            color: var(--text-color);
+            background-color: var(--gray-50);
+            color: var(--gray-800);
             min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.6;
+            padding: 16px;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 480px;
             margin: 0 auto;
-            padding: 1rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 32px;
+            padding: 24px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--nubank-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--nubank-purple);
+        }
+
+        .subtitle {
+            color: var(--gray-500);
+            font-size: 14px;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
             position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, var(--quantum-purple), var(--neon-blue));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: var(--glow);
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
-        .cyber-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: var(--glow);
-            margin-bottom: 1.5rem;
-            border: var(--cyber-border);
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .card-badge {
+            background: var(--purple-lighter);
+            color: var(--nubank-purple);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            color: var(--gray-800);
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--nubank-purple);
+            box-shadow: 0 0 0 3px rgba(130, 10, 209, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--nubank-purple);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--purple-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--nubank-purple);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--nubank-purple);
+        }
+
+        .results-box {
+            width: 100%;
+            height: 160px;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--gray-100);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--nubank-purple), var(--purple-light));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--nubank-purple);
+            margin-bottom: 4px;
+        }
+
+        .stat-value.valid {
+            color: var(--success);
+        }
+
+        .stat-value.invalid {
+            color: var(--error);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
         }
 
         .tabs {
             display: flex;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .tab {
-            padding: 0.8rem 1.5rem;
+            padding: 12px 16px;
             cursor: pointer;
-            background: rgba(0, 0, 0, 0.3);
-            margin-right: 0.5rem;
-            border-radius: 8px 8px 0 0;
-            white-space: nowrap;
+            font-weight: 500;
+            color: var(--gray-500);
+            position: relative;
+            margin-right: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--nubank-purple);
         }
 
         .tab.active {
-            background: linear-gradient(135deg, var(--quantum-purple), var(--neon-blue));
-            color: black;
-            font-weight: bold;
+            color: var(--nubank-purple);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--nubank-purple);
         }
 
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--neon-blue);
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 8px;
-            border: var(--cyber-border);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-color);
-            font-family: 'Courier New', monospace;
-        }
-
-        .cyber-btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            background: linear-gradient(135deg, var(--quantum-purple), var(--neon-blue));
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .cyber-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 245, 255, 0.4);
-        }
-
-        .results-box {
-            width: 100%;
-            height: 200px;
-            padding: 1rem;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.5);
-            border: var(--cyber-border);
-            color: var(--matrix-green);
-            font-family: 'Courier New', monospace;
-            resize: vertical;
-            margin-bottom: 1rem;
-            overflow-y: auto;
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            border: var(--cyber-border);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--neon-blue), var(--cyber-green));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .analysis-results {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .tutorial-content {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: var(--cyber-border);
-            margin-bottom: 1.5rem;
-        }
-
-        .tutorial-content h3 {
-            color: var(--neon-blue);
-            margin-bottom: 1rem;
-            border-bottom: var(--cyber-border);
-            padding-bottom: 0.5rem;
-        }
-
-        .tutorial-content ol {
-            padding-left: 1.5rem;
-        }
-
-        .tutorial-content li {
-            margin-bottom: 0.8rem;
-        }
-
-        .progress-container {
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            margin: 1rem 0;
-            display: none;
-        }
-
-        .progress-bar {
-            height: 20px;
-            border-radius: 8px;
-            background: linear-gradient(90deg, var(--quantum-purple), var(--neon-blue));
-            width: 0%;
-            transition: width 0.3s ease;
-            text-align: center;
-            line-height: 20px;
-            font-size: 12px;
-            color: black;
-        }
-
         .smart-options {
-            display: none;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            border: var(--cyber-border);
+            background: rgba(130, 10, 209, 0.05);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 3px solid var(--nubank-purple);
         }
 
-        @media (max-width: 768px) {
-            .analysis-results {
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-800);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: var(--radius-xl);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--purple-lighter);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--nubank-purple);
+            font-size: 24px;
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gray-800);
+        }
+
+        .empty-text {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0;
+            }
+            
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
-            h1 {
-                font-size: 2rem;
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .card {
+                padding: 20px;
             }
         }
     </style>
@@ -256,89 +416,120 @@
 <body>
     <div class="container">
         <header>
-            <h1>MATRIX AI GENERATOR PRO</h1>
-            <p class="subtitle">⚡ Método Mikey 3.0 | Geração Inteligente</p>
+            <div class="logo">
+                <div class="logo-icon">AI</div>
+                <div class="logo-text">Card Generator</div>
+            </div>
+            <div class="subtitle">Gerador inteligente de cartões com validação Luhn</div>
         </header>
         
-        <div class="cyber-card">
+        <div class="card">
             <div class="tabs">
-                <div class="tab active" data-tab="generator">Gerador</div>
-                <div class="tab" data-tab="analysis">Análise</div>
-                <div class="tab" data-tab="tutorial">Tutorial</div>
+                <div class="tab active" data-tab="generator">
+                    <i class="fas fa-bolt"></i> Gerador
+                </div>
+                <div class="tab" data-tab="analysis">
+                    <i class="fas fa-chart-bar"></i> Análise
+                </div>
+                <div class="tab" data-tab="help">
+                    <i class="fas fa-question-circle"></i> Ajuda
+                </div>
             </div>
             
             <div class="tab-content active" id="generator">
-                <div class="input-group">
-                    <label>Número do Cartão Base</label>
-                    <input type="text" id="card-number" placeholder="Ex: 455079000185xxxx ou 455079xxxxxx1234">
+                <div class="card-header">
+                    <div class="card-title">Configurações de Geração</div>
+                    <div class="card-badge" id="method-badge">Hiper Base</div>
                 </div>
                 
                 <div class="input-group">
-                    <label>Data de Expiração (MM/AAAA)</label>
-                    <input type="text" id="expiry" placeholder="Deixe em branco para aleatório">
+                    <label class="input-label">Número do Cartão Base</label>
+                    <input type="text" id="card-number" class="input-field" placeholder="Ex: 455079000185xxxx">
+                    <div class="input-hint">Use 'x' para dígitos variáveis. Ex: 455079xxxxxx1234</div>
                 </div>
                 
                 <div class="input-group">
-                    <label>Método de Geração</label>
-                    <select id="method">
+                    <label class="input-label">Data de Expiração (MM/AAAA)</label>
+                    <input type="text" id="expiry" class="input-field" placeholder="Deixe em branco para aleatório">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Método de Geração</label>
+                    <select id="method" class="input-field">
                         <option value="hyperbase">Hiper Base (8 dígitos fixos)</option>
                         <option value="partial">Parcial (12 dígitos fixos)</option>
                         <option value="smart">Modo Inteligente</option>
                     </select>
                 </div>
                 
-                <div id="smart-options" class="smart-options">
+                <div id="smart-options" class="smart-options" style="display: none;">
                     <div class="input-group">
-                        <label>Padrão de Geração</label>
-                        <select id="smart-pattern">
+                        <label class="input-label">Padrão de Geração</label>
+                        <select id="smart-pattern" class="input-field">
                             <option value="last4">Últimos 4 dígitos variáveis</option>
                             <option value="middle4">4 dígitos do meio variáveis</option>
                             <option value="custom">Personalizado (use x's no campo base)</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>Taxa de Variação</label>
-                        <select id="variation-rate">
-                            <option value="low">Baixa (variação mínima)</option>
-                            <option value="medium" selected>Média (balanceada)</option>
-                            <option value="high">Alta (máxima variação)</option>
+                        <label class="input-label">Nível de Variação</label>
+                        <select id="variation-rate" class="input-field">
+                            <option value="low">Baixo (variação mínima)</option>
+                            <option value="medium" selected>Médio (balanceado)</option>
+                            <option value="high">Alto (máxima variação)</option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="input-group">
-                    <label>Quantidade a Gerar</label>
-                    <input type="number" id="quantity" value="100" min="1" max="5000">
+                    <label class="input-label">Quantidade a Gerar</label>
+                    <input type="number" id="quantity" class="input-field" value="50" min="1" max="5000">
                 </div>
                 
-                <button class="cyber-btn" id="generate-btn">Gerar Matriz</button>
+                <button class="btn" id="generate-btn">
+                    <i class="fas fa-magic"></i> Gerar Cartões
+                </button>
+                
                 <div class="progress-container" id="progress-container">
-                    <div class="progress-bar" id="progress-bar">0%</div>
+                    <div class="progress-bar" id="progress-bar"></div>
                 </div>
                 
                 <div class="input-group">
-                    <label>Resultados Gerados</label>
+                    <label class="input-label">Resultados Gerados</label>
                     <textarea class="results-box" id="results-box" readonly></textarea>
-                    <button class="cyber-btn" id="copy-all-btn">Copiar Tudo</button>
-                    <button class="cyber-btn" id="clear-btn">Limpar Tudo</button>
+                    <div class="btn-group">
+                        <button class="btn" id="copy-all-btn">
+                            <i class="fas fa-copy"></i> Copiar Tudo
+                        </button>
+                        <button class="btn btn-secondary" id="clear-btn">
+                            <i class="fas fa-trash"></i> Limpar
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <div class="tab-content" id="analysis">
+                <div class="card-header">
+                    <div class="card-title">Análise de Cartões</div>
+                    <div class="card-badge">Luhn Check</div>
+                </div>
+                
                 <div class="input-group">
-                    <label>Cole os cartões para análise</label>
-                    <textarea class="results-box" id="analysis-box" placeholder="Cole aqui os cartões gerados..."></textarea>
-                    <button class="cyber-btn" id="run-analysis-btn">Analisar Cartões</button>
+                    <label class="input-label">Cole os cartões para análise</label>
+                    <textarea class="results-box" id="analysis-box" placeholder="Cole aqui os cartões no formato: NÚMERO|MM|AAAA|CVV"></textarea>
+                    <button class="btn" id="run-analysis-btn">
+                        <i class="fas fa-search"></i> Analisar Cartões
+                    </button>
                 </div>
                 
                 <div id="analysis-results" style="display: none;">
-                    <div class="stats-container">
+                    <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-value" id="total-cards">0</div>
                             <div class="stat-label">Total</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value" id="valid-luhn">0%</div>
+                            <div class="stat-value valid" id="valid-luhn">0%</div>
                             <div class="stat-label">Válidos</div>
                         </div>
                         <div class="stat-card">
@@ -347,69 +538,83 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-value" id="common-bin">-</div>
-                            <div class="stat-label">BIN Mais Comum</div>
+                            <div class="stat-label">BIN Comum</div>
                         </div>
                     </div>
                     
-                    <div class="analysis-results">
-                        <div>
-                            <label>Cartões Válidos (Luhn)</label>
-                            <textarea class="results-box" id="valid-cards-box" readonly></textarea>
-                            <button class="cyber-btn" id="copy-valid-btn">Copiar Válidos</button>
-                        </div>
-                        <div>
-                            <label>Cartões Inválidos</label>
-                            <textarea class="results-box" id="invalid-cards-box" readonly></textarea>
-                            <button class="cyber-btn" id="copy-invalid-btn">Copiar Inválidos</button>
-                        </div>
+                    <div class="input-group">
+                        <label class="input-label">Cartões Válidos (Luhn)</label>
+                        <textarea class="results-box" id="valid-cards-box" readonly></textarea>
+                        <button class="btn" id="copy-valid-btn">
+                            <i class="fas fa-copy"></i> Copiar Válidos
+                        </button>
                     </div>
+                </div>
+                
+                <div id="empty-analysis" class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="empty-title">Nenhum dado para analisar</div>
+                    <div class="empty-text">Cole os cartões gerados no campo acima e clique em "Analisar Cartões"</div>
                 </div>
             </div>
             
-            <div class="tab-content" id="tutorial">
-                <div class="tutorial-content">
-                    <h3><i class="fas fa-graduation-cap"></i> MÉTODO MIKEY 3.0 - TUTORIAL</h3>
-                    <ol>
-                        <li><strong>Obtenha uma base inicial</strong> - Pode ser um cartão queimado ou um BIN conhecido</li>
-                        <li><strong>Use o gerador de matriz</strong> para criar variações:
-                            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
-                                <li><strong>Hiper Base:</strong> Mantém os primeiros 8 dígitos fixos (ideal para BINs conhecidos)</li>
-                                <li><strong>Parcial:</strong> Mantém os primeiros 12 dígitos fixos (para cartões parciais)</li>
-                                <li><strong>Inteligente:</strong> Analisa o padrão e otimiza a geração automaticamente</li>
-                            </ul>
-                        </li>
-                        <li><strong>Verifique os cartões</strong> em um checker confiável</li>
-                        <li><strong>Analise os resultados</strong> para identificar padrões de validade</li>
-                        <li><strong>Refine sua matriz</strong> com base nos dados coletados</li>
-                    </ol>
+            <div class="tab-content" id="help">
+                <div class="card-header">
+                    <div class="card-title">Como usar o gerador</div>
+                    <div class="card-badge">Guia</div>
                 </div>
                 
-                <div class="tutorial-content">
-                    <h3><i class="fas fa-lightbulb"></i> DICAS AVANÇADAS</h3>
-                    <ul>
-                        <li>O <strong>Modo Inteligente</strong> analisa seu cartão base e sugere o melhor padrão de geração</li>
-                        <li>Para melhores resultados, use cartões base com pelo menos 8 dígitos conhecidos</li>
-                        <li>Combine múltiplos BINs conhecidos para aumentar a diversidade</li>
-                        <li>Datas de expiração futuras (2-3 anos) têm maior taxa de sucesso</li>
-                        <li>Use a análise para identificar BINs com maior taxa de validade</li>
-                    </ul>
-                </div>
-                
-                <div class="tutorial-content">
-                    <h3><i class="fas fa-cogs"></i> FUNCIONAMENTO DO MODO INTELIGENTE</h3>
-                    <p>O modo inteligente analisa seu cartão base e:</p>
-                    <ul>
-                        <li>Identifica a posição dos dígitos conhecidos</li>
-                        <li>Seleciona automaticamente o melhor padrão de variação</li>
-                        <li>Otimiza a geração para maximizar cartões válidos</li>
-                        <li>Aplica o algoritmo Luhn automaticamente quando possível</li>
-                    </ul>
+                <div class="input-group">
+                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple);">Métodos de Geração</h3>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Hiper Base (8 dígitos fixos)</h4>
+                        <p style="font-size: 14px; color: var(--gray-500); margin-bottom: 16px;">
+                            Mantém os primeiros 8 dígitos fixos e varia os últimos 8. Ideal quando você conhece o BIN completo (6 dígitos) e mais 2 dígitos.
+                        </p>
+                        
+                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Parcial (12 dígitos fixos)</h4>
+                        <p style="font-size: 14px; color: var(--gray-500); margin-bottom: 16px;">
+                            Mantém os primeiros 12 dígitos fixos e varia os últimos 4. Use quando tiver quase o cartão completo, faltando apenas os últimos dígitos.
+                        </p>
+                        
+                        <h4 style="margin-bottom: 8px; font-size: 15px; font-weight: 600;">Modo Inteligente</h4>
+                        <p style="font-size: 14px; color: var(--gray-500);">
+                            Analisa automaticamente o padrão do seu cartão base e sugere a melhor estratégia de geração. Detecta a posição dos dígitos conhecidos e otimiza a variação.
+                        </p>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 16px; color: var(--nubank-purple);">Dicas Avançadas</h3>
+                    <div style="background: var(--gray-50); padding: 16px; border-radius: var(--radius-md);">
+                        <ul style="font-size: 14px; color: var(--gray-500); margin-left: 20px;">
+                            <li style="margin-bottom: 8px;">Use datas de expiração futuras (2-3 anos) para melhores resultados</li>
+                            <li style="margin-bottom: 8px;">Comece com pequenas quantidades (50-100) para testar padrões</li>
+                            <li style="margin-bottom: 8px;">Combine múltiplos BINs conhecidos para aumentar a diversidade</li>
+                            <li>Use a análise Luhn para filtrar cartões inválidos antes de testar</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
+        // Toast notification
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            if (type) toast.classList.add(type);
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
         // Sistema de abas
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -418,17 +623,35 @@
                 
                 tab.classList.add('active');
                 document.getElementById(tab.dataset.tab).classList.add('active');
+                
+                // Mostrar/ocultar empty state na análise
+                if (tab.dataset.tab === 'analysis') {
+                    const analysisBox = document.getElementById('analysis-box').value;
+                    if (analysisBox.trim() === '') {
+                        document.getElementById('empty-analysis').style.display = 'block';
+                        document.getElementById('analysis-results').style.display = 'none';
+                    } else {
+                        document.getElementById('empty-analysis').style.display = 'none';
+                    }
+                }
             });
         });
         
-        // Controle do modo inteligente
+        // Atualizar badge do método
         document.getElementById('method').addEventListener('change', function() {
+            const methodBadge = document.getElementById('method-badge');
             const smartOptions = document.getElementById('smart-options');
-            if (this.value === 'smart') {
+            
+            if (this.value === 'hyperbase') {
+                methodBadge.textContent = 'Hiper Base';
+                smartOptions.style.display = 'none';
+            } else if (this.value === 'partial') {
+                methodBadge.textContent = 'Parcial';
+                smartOptions.style.display = 'none';
+            } else {
+                methodBadge.textContent = 'Inteligente';
                 smartOptions.style.display = 'block';
                 analyzeCardPattern();
-            } else {
-                smartOptions.style.display = 'none';
             }
         });
         
@@ -468,62 +691,76 @@
             const progressBar = document.getElementById('progress-bar');
             
             if (!cardBase) {
-                alert('Insira um número base!');
+                showToast('Por favor, insira um número base', 'error');
                 return;
             }
             
+            if (quantity > 5000) {
+                showToast('Quantidade máxima é 5000 cartões', 'error');
+                return;
+            }
+            
+            this.disabled = true;
             progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
             let results = '';
             const batchSize = 100;
             const batches = Math.ceil(quantity / batchSize);
             
-            for (let batch = 0; batch < batches; batch++) {
-                const currentBatchSize = Math.min(batchSize, quantity - (batch * batchSize));
-                let batchResults = '';
-                
-                for (let i = 0; i < currentBatchSize; i++) {
-                    let cardNumber;
+            try {
+                for (let batch = 0; batch < batches; batch++) {
+                    const currentBatchSize = Math.min(batchSize, quantity - (batch * batchSize));
+                    let batchResults = '';
                     
-                    if (method === 'hyperbase') {
-                        const base = cardBase.substring(0, 8).replace(/x/g, () => Math.floor(Math.random() * 10));
-                        cardNumber = base + generateRandomDigits(8);
-                    } else if (method === 'partial') {
-                        const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
-                        cardNumber = base + generateRandomDigits(4);
-                    } else if (method === 'smart') {
-                        cardNumber = generateSmartCard(cardBase);
+                    for (let i = 0; i < currentBatchSize; i++) {
+                        let cardNumber;
+                        
+                        if (method === 'hyperbase') {
+                            const base = cardBase.substring(0, 8).replace(/x/g, () => Math.floor(Math.random() * 10));
+                            cardNumber = base + generateRandomDigits(8);
+                        } else if (method === 'partial') {
+                            const base = cardBase.substring(0, 12).replace(/x/g, () => Math.floor(Math.random() * 10));
+                            cardNumber = base + generateRandomDigits(4);
+                        } else if (method === 'smart') {
+                            cardNumber = generateSmartCard(cardBase);
+                        }
+                        
+                        // Aplicar algoritmo de Luhn se o cartão tiver 16 dígitos
+                        if (cardNumber.length === 16 && method !== 'smart') {
+                            cardNumber = applyLuhnAlgorithm(cardNumber);
+                        }
+                        
+                        let month, year;
+                        if (expiry) {
+                            [month, year] = expiry.split('/');
+                        } else {
+                            year = new Date().getFullYear() + Math.floor(Math.random() * 5);
+                            month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+                        }
+                        
+                        const cvv = generateRandomDigits(3);
+                        batchResults += `${cardNumber}|${month}|${year}|${cvv}\n`;
                     }
                     
-                    // Aplicar algoritmo de Luhn se o cartão tiver 16 dígitos
-                    if (cardNumber.length === 16 && method !== 'smart') {
-                        cardNumber = applyLuhnAlgorithm(cardNumber);
-                    }
+                    results += batchResults;
+                    document.getElementById('results-box').value = results.trim();
                     
-                    let month, year;
-                    if (expiry) {
-                        [month, year] = expiry.split('/');
-                    } else {
-                        year = new Date().getFullYear() + Math.floor(Math.random() * 5);
-                        month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-                    }
+                    // Atualizar progresso
+                    const progress = Math.min(100, Math.round(((batch + 1) * batchSize) / quantity * 100));
+                    progressBar.style.width = `${progress}%`;
                     
-                    const cvv = generateRandomDigits(3);
-                    batchResults += `${cardNumber}|${month}|${year}|${cvv}\n`;
+                    // Dar tempo para a UI atualizar
+                    await new Promise(resolve => setTimeout(resolve, 0));
                 }
                 
-                results += batchResults;
-                document.getElementById('results-box').value = results.trim();
-                
-                // Atualizar progresso
-                const progress = Math.min(100, Math.round(((batch + 1) * batchSize) / quantity * 100));
-                progressBar.style.width = `${progress}%`;
-                progressBar.textContent = `${progress}%`;
-                
-                // Dar tempo para a UI atualizar
-                await new Promise(resolve => setTimeout(resolve, 0));
+                showToast(`✅ ${quantity} cartões gerados com sucesso!`, 'success');
+            } catch (error) {
+                showToast('⚠️ Ocorreu um erro durante a geração', 'error');
+                console.error(error);
+            } finally {
+                this.disabled = false;
+                progressContainer.style.display = 'none';
             }
-            
-            progressContainer.style.display = 'none';
         });
         
         // Geração inteligente de cartões
@@ -588,8 +825,8 @@
         // Análise de cartões
         document.getElementById('run-analysis-btn').addEventListener('click', function() {
             const content = document.getElementById('analysis-box').value;
-            if (!content) {
-                alert('Cole alguns cartões primeiro!');
+            if (!content.trim()) {
+                showToast('Cole alguns cartões para análise', 'error');
                 return;
             }
             
@@ -631,12 +868,15 @@
             }
             
             document.getElementById('valid-cards-box').value = validCards.trim();
-            document.getElementById('invalid-cards-box').value = invalidCards.trim();
             document.getElementById('total-cards').textContent = cards.length;
             document.getElementById('valid-luhn').textContent = Math.round((validCount / cards.length) * 100) + '%';
             document.getElementById('unique-cards').textContent = uniqueCards.size;
             document.getElementById('common-bin').textContent = commonBin;
+            
+            document.getElementById('empty-analysis').style.display = 'none';
             document.getElementById('analysis-results').style.display = 'block';
+            
+            showToast(`✅ Análise concluída: ${validCount} válidos (${Math.round((validCount / cards.length) * 100)}%)`, 'success');
         });
         
         // Funções auxiliares
@@ -665,32 +905,28 @@
         
         // Botões de copiar
         document.getElementById('copy-all-btn').addEventListener('click', function() {
-            copyToClipboard('results-box');
+            copyToClipboard('results-box', 'Todos os cartões copiados! ✅');
         });
         
         document.getElementById('copy-valid-btn').addEventListener('click', function() {
-            copyToClipboard('valid-cards-box');
-        });
-        
-        document.getElementById('copy-invalid-btn').addEventListener('click', function() {
-            copyToClipboard('invalid-cards-box');
+            copyToClipboard('valid-cards-box', 'Cartões válidos copiados! ✅');
         });
         
         document.getElementById('clear-btn').addEventListener('click', function() {
             document.getElementById('results-box').value = '';
+            showToast('Área de resultados limpa', 'success');
         });
         
-        function copyToClipboard(elementId) {
+        function copyToClipboard(elementId, message) {
             const element = document.getElementById(elementId);
+            if (!element.value.trim()) {
+                showToast('Nada para copiar', 'error');
+                return;
+            }
+            
             element.select();
             document.execCommand('copy');
-            
-            // Feedback visual
-            const originalText = element.value;
-            element.value = "✅ Copiado para a área de transferência!";
-            setTimeout(() => {
-                element.value = originalText;
-            }, 1500);
+            showToast(message || 'Copiado para a área de transferência!', 'success');
         }
         
         // Análise automática do padrão quando o cartão base é alterado
